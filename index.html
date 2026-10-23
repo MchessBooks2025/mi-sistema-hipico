@@ -69,6 +69,21 @@
         .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
         .btn-info { background: #0ea5e9; color: white; } .btn-info:hover { background: #0284c7; }
         
+        /* BOTÓN DE LA CALCULADORA (ROSA) */
+        .btn-calc { 
+            background: #ec4899; 
+            color: white; 
+            text-decoration: none; 
+            padding: 10px 16px; 
+            border-radius: 4px; 
+            font-weight: 600; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            transition: 0.2s;
+        }
+        .btn-calc:hover { background: #db2777; }
+
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
         
         table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
@@ -108,7 +123,7 @@
         .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 18px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
         .btn-scratch:hover { background: rgba(255,255,255,0.1); }
 
-        /* ESTILOS DEL FORMULARIO GRANDE */
+        /* ESTILOS DE MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 25px; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { color: #60a5fa; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 22px;}
@@ -129,7 +144,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v19.0 - Filtros de Carrera</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v21.0 - Botón Calculadora</div>
     </header>
 
     <div class="top-dashboard">
@@ -151,11 +166,10 @@
     </div>
 
     <div class="panel">
-        <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
+        <div style="display: flex; gap: 10px; align-items: center; flex: 1; flex-wrap: wrap;">
             <label style="color: var(--gold); font-weight: bold; font-size: 14px;">Hipódromo:</label>
             <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
             
-            <!-- NUEVO FILTRO POR CARRERA -->
             <label style="color: var(--gold); font-weight: bold; font-size: 14px; margin-left: 10px;">Ver Carrera:</label>
             <select id="filtroCarrera" onchange="renderTabla()" style="width: 100px; border-color: var(--gold); font-weight: bold; color: var(--gold);">
                 <option value="TODAS">TODAS</option>
@@ -166,6 +180,9 @@
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
             <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
+            
+            <!-- EL NUEVO BOTÓN DE LA CALCULADORA -->
+            <a href="calculadora.html" target="_blank" class="btn-calc">🧮 Calculadora</a>
         </div>
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
             <input type="number" id="carrera" placeholder="Carrera N°" style="width: 100px; font-size: 14px;">
@@ -204,7 +221,7 @@
         </table>
     </div>
 
-    <!-- FORMULARIO PARA AÑADIR CABALLO (MODAL GRANDE CON 4 TIEMPOS) -->
+    <!-- FORMULARIO PARA AÑADIR CABALLO -->
     <div class="modal-overlay" id="modalFormulario">
         <div class="modal-content">
             <h2>🐎 Añadir Nuevo Caballo</h2>
@@ -291,18 +308,13 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
-        // --- NUEVO: Actualizar el filtro de carreras dinámicamente ---
         function actualizarFiltroCarreras() {
             const select = document.getElementById('filtroCarrera');
             const valorActual = select.value;
             const hipo = document.getElementById('hipodromoActivo').value;
             const carreras = [...new Set(caballos.filter(c => c.hipodromo === hipo).map(c => c.carrera))].sort((a,b) => a - b);
-            
             select.innerHTML = '<option value="TODAS">TODAS</option>';
-            carreras.forEach(num => {
-                select.innerHTML += `<option value="${num}">Carrera ${num}</option>`;
-            });
-            
+            carreras.forEach(num => { select.innerHTML += `<option value="${num}">Carrera ${num}</option>`; });
             if (carreras.includes(parseInt(valorActual)) || valorActual === "TODAS") select.value = valorActual;
         }
 
@@ -493,7 +505,6 @@
             tbody.innerHTML = ''; 
             actualizarFiltroCarreras();
 
-            // NUEVA LÓGICA DE FILTRADO
             let caballosFiltrados = caballos.filter(c => c.hipodromo === filtroHipo);
             if (filtroCar !== "TODAS") {
                 caballosFiltrados = caballosFiltrados.filter(c => c.carrera === parseInt(filtroCar));
@@ -556,16 +567,14 @@
             
             const panel = document.getElementById('podiumPanel'); const ticketPanel = document.getElementById('ticketPanel'); const paceAlert = document.getElementById('paceAlert');
             
-            // El podio también debe respetar los filtros
             let caballosFiltrados = caballos.filter(c => c.hipodromo === filtroHipo && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
             if (filtroCar !== "TODAS") {
                 caballosFiltrados = caballosFiltrados.filter(c => c.carrera === parseInt(filtroCar));
             }
 
-            if (caballosFiltrados.length === 0) { panel.style.display = 'none'; ticketPanel.style.display = 'none'; paceAlert.style.display = 'none'; return; }
+            if (caballosFiltrados.length === 0) { panel.style.display = 'none'; ticketPanel.style.display = 'none'; if(paceAlert) paceAlert.style.display = 'none'; return; }
             panel.style.display = 'flex'; ticketPanel.style.display = 'flex';
             
-            // Ordenar y tomar los 4 primeros para el podio
             const topCarrera = caballosFiltrados.sort((a,b) => a.ranking - b.ranking).slice(0, 4);
             
             const p1 = topCarrera[0]; const p2 = topCarrera[1]; const p3 = topCarrera[2]; const p4 = topCarrera[3];
@@ -581,6 +590,7 @@
             if (p1 && p2) {
                 document.getElementById('tkWin').innerText = `#${p1.nro}`; document.getElementById('tkExacta').innerText = `${p1.nro} con ${p2.nro}`; document.getElementById('tkTrifecta').innerText = p3 ? `${p1.nro} - ${p2.nro} - ${p3.nro}` : 'Faltan datos'; document.getElementById('tkPool').innerText = p4 ? `${p1.nro}, ${p2.nro}, ${p3.nro}, ${p4.nro}` : `${p1.nro}, ${p2.nro}, ${p3.nro}`;
             } else { document.getElementById('tkWin').innerText = '-'; document.getElementById('tkExacta').innerText = '-'; document.getElementById('tkTrifecta').innerText = '-'; document.getElementById('tkPool').innerText = '-'; }
+            
             const earlyHorses = topCarrera.filter(c => (c.style === 'E' || c.style === 'E/P') && parseFloat(c.quirin) >= 5);
             if (earlyHorses.length >= 3) { paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.15)'; paceAlert.style.borderColor = 'var(--danger)'; paceAlert.style.color = '#fca5a5'; document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida.`; } 
             else if (earlyHorses.length === 1 && topCarrera.length > 3) { paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)'; paceAlert.style.borderColor = 'var(--success)'; paceAlert.style.color = '#6ee7b7'; document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida.`; } 
