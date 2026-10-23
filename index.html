@@ -129,7 +129,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v18.0 - Formulario Mejorado</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v19.0 - Filtros de Carrera</div>
     </header>
 
     <div class="top-dashboard">
@@ -153,21 +153,25 @@
     <div class="panel">
         <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
             <label style="color: var(--gold); font-weight: bold; font-size: 14px;">Hipódromo:</label>
-            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 160px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
-            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 10px 15px;" title="Actualizar Jinetes y Entrenadores">⚙️ Stats</button>
-            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 10px 15px;" title="Importar archivo JSON con stats">📥 Stats</button>
+            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
+            
+            <!-- NUEVO FILTRO POR CARRERA -->
+            <label style="color: var(--gold); font-weight: bold; font-size: 14px; margin-left: 10px;">Ver Carrera:</label>
+            <select id="filtroCarrera" onchange="renderTabla()" style="width: 100px; border-color: var(--gold); font-weight: bold; color: var(--gold);">
+                <option value="TODAS">TODAS</option>
+            </select>
+            
+            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 8px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
+            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥 Stats</button>
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
-            <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 10px 15px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
+            <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
         </div>
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
-            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 110px; font-size: 14px;">
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 140px; font-size: 14px;">
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 100px; font-size: 14px;">
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 120px; font-size: 14px;">
             <button onclick="abrirFormularioCaballo()" class="btn-primary" style="width: auto; padding: 10px 20px;">➕ Añadir Caballo</button>
         </div>
-        <select id="filtroHipodromo" onchange="renderTabla()" style="width: 160px; background: #0f172a; font-size: 14px;">
-            <option value="TODOS">🌐 Ver Todos</option>
-        </select>
     </div>
 
     <div class="panel" style="justify-content: space-between;">
@@ -206,26 +210,11 @@
             <h2>🐎 Añadir Nuevo Caballo</h2>
             
             <div class="form-grid">
-                <div class="form-group">
-                    <label>Nro del Caballo</label>
-                    <input type="number" id="f_nro" placeholder="Ej: 1">
-                </div>
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" id="f_name" placeholder="Ej: First Class">
-                </div>
-                <div class="form-group">
-                    <label>Kilos</label>
-                    <input type="number" step="0.1" id="f_kilos" placeholder="Ej: 55.3">
-                </div>
-                <div class="form-group">
-                    <label>Puesto (PP)</label>
-                    <input type="number" id="f_puesto" placeholder="Ej: 1">
-                </div>
-                <div class="form-group">
-                    <label>Morning Line (ML)</label>
-                    <input type="text" id="f_ml" placeholder="Ej: 5/2">
-                </div>
+                <div class="form-group"><label>Nro del Caballo</label><input type="number" id="f_nro" placeholder="Ej: 1"></div>
+                <div class="form-group"><label>Nombre</label><input type="text" id="f_name" placeholder="Ej: First Class"></div>
+                <div class="form-group"><label>Kilos</label><input type="number" step="0.1" id="f_kilos" placeholder="Ej: 55.3"></div>
+                <div class="form-group"><label>Puesto (PP)</label><input type="number" id="f_puesto" placeholder="Ej: 1"></div>
+                <div class="form-group"><label>Morning Line (ML)</label><input type="text" id="f_ml" placeholder="Ej: 5/2"></div>
             </div>
 
             <div class="form-section-title">Tiempos y Distancias (Mínimo 4 carreras)</div>
@@ -302,6 +291,21 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
+        // --- NUEVO: Actualizar el filtro de carreras dinámicamente ---
+        function actualizarFiltroCarreras() {
+            const select = document.getElementById('filtroCarrera');
+            const valorActual = select.value;
+            const hipo = document.getElementById('hipodromoActivo').value;
+            const carreras = [...new Set(caballos.filter(c => c.hipodromo === hipo).map(c => c.carrera))].sort((a,b) => a - b);
+            
+            select.innerHTML = '<option value="TODAS">TODAS</option>';
+            carreras.forEach(num => {
+                select.innerHTML += `<option value="${num}">Carrera ${num}</option>`;
+            });
+            
+            if (carreras.includes(parseInt(valorActual)) || valorActual === "TODAS") select.value = valorActual;
+        }
+
         function abrirFormularioCaballo() {
             const car = document.getElementById('carrera').value;
             const dist = document.getElementById('distancia').value;
@@ -320,11 +324,8 @@
             caballos.push({
                 id: Date.now(), hipodromo: hipodromo, carrera: parseInt(carrera), distanciaHoy: parseInt(distancia),
                 scratched: false, 
-                nro: document.getElementById('f_nro').value,
-                name: document.getElementById('f_name').value,
-                kilos: document.getElementById('f_kilos').value,
-                puesto: document.getElementById('f_puesto').value,
-                ml: document.getElementById('f_ml').value,
+                nro: document.getElementById('f_nro').value, name: document.getElementById('f_name').value,
+                kilos: document.getElementById('f_kilos').value, puesto: document.getElementById('f_puesto').value, ml: document.getElementById('f_ml').value,
                 t1: document.getElementById('f_t1').value, d1: document.getElementById('f_d1').value,
                 t2: document.getElementById('f_t2').value, d2: document.getElementById('f_d2').value,
                 t3: document.getElementById('f_t3').value, d3: document.getElementById('f_d3').value,
@@ -333,7 +334,6 @@
                 notes: '', tip: '', jockey_name: '', trainer_name: '', j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
                 style: '', quirin: '', tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
-            
             guardarSilencioso(); renderTabla(); calcularTodo(); cerrarFormularioCaballo();
         }
 
@@ -410,6 +410,7 @@
             const hipo = document.getElementById('hipodromoActivo').value;
             if (DB_HIPODROMOS[hipo]) { JOCKEYS_ACTUALES = DB_HIPODROMOS[hipo].jockeys; TRAINERS_ACTUALES = DB_HIPODROMOS[hipo].trainers; } 
             else { JOCKEYS_ACTUALES = {}; TRAINERS_ACTUALES = {}; }
+            actualizarFiltroCarreras();
             renderTabla(); 
         }
 
@@ -484,18 +485,20 @@
 
         function toggleRetirado(id) { const caballo = caballos.find(c => c.id === id); if(caballo) { caballo.scratched = !caballo.scratched; guardarSilencioso(); calcularTodo(); } }
 
-        function actualizarFiltro() {
-            const select = document.getElementById('filtroHipodromo'); const valorActual = select.value;
-            const hipodromos = [...new Set(caballos.map(c => c.hipodromo))];
-            select.innerHTML = '<option value="TODOS">🌐 Ver Todos</option>';
-            hipodromos.forEach(h => select.innerHTML += `<option value="${h}">${h}</option>`);
-            if (hipodromos.includes(valorActual) || valorActual === "TODOS") select.value = valorActual;
-        }
-
         function renderTabla() {
-            const tbody = document.getElementById('cuerpoTabla'); const filtro = document.getElementById('filtroHipodromo').value;
-            tbody.innerHTML = ''; actualizarFiltro();
-            const caballosFiltrados = filtro === "TODOS" ? caballos : caballos.filter(c => c.hipodromo === filtro);
+            const tbody = document.getElementById('cuerpoTabla'); 
+            const filtroHipo = document.getElementById('hipodromoActivo').value;
+            const filtroCar = document.getElementById('filtroCarrera').value;
+            
+            tbody.innerHTML = ''; 
+            actualizarFiltroCarreras();
+
+            // NUEVA LÓGICA DE FILTRADO
+            let caballosFiltrados = caballos.filter(c => c.hipodromo === filtroHipo);
+            if (filtroCar !== "TODAS") {
+                caballosFiltrados = caballosFiltrados.filter(c => c.carrera === parseInt(filtroCar));
+            }
+
             let jockeyOptions = '<option value="">--</option>'; for (let name in JOCKEYS_ACTUALES) jockeyOptions += `<option value="${name}">${name}</option>`;
             let trainerOptions = '<option value="">--</option>'; for (let name in TRAINERS_ACTUALES) trainerOptions += `<option value="${name}">${name}</option>`;
             let tipOptions = '<option value="">--</option>'; TIPS_LIST.forEach(t => { if(t !== "") tipOptions += `<option value="${t}">${t}</option>`; });
@@ -512,7 +515,7 @@
                 tr.innerHTML = `
                     <td><button class="btn-scratch" onclick="toggleRetirado(${c.id})" title="${c.scratched ? 'Restaurar' : 'Retirar'}">${c.scratched ? '♻️' : '🚫'}</button></td>
                     <td><span style="font-weight: 600; color: #94a3b8; font-size: 12px;">${c.hipodromo}</span></td>
-                    <td style="font-size: 13px;">${c.carrera}</td>
+                    <td style="font-size: 13px; font-weight:bold; color:var(--gold);">${c.carrera}</td>
                     <td style="text-align:left; font-weight:bold; color:white; padding-left: 10px;">#${c.nro} - ${c.name}</td>
                     <td><select onchange="seleccionarJockey(${c.id}, this.value)" style="text-align:left;">${jSelect}</select></td>
                     <td><select onchange="seleccionarTrainer(${c.id}, this.value)" style="text-align:left;">${tSelect}</select></td>
@@ -548,16 +551,28 @@
         }
 
         function actualizarDashboard() {
-            const filtro = document.getElementById('filtroHipodromo').value;
+            const filtroHipo = document.getElementById('hipodromoActivo').value;
+            const filtroCar = document.getElementById('filtroCarrera').value;
+            
             const panel = document.getElementById('podiumPanel'); const ticketPanel = document.getElementById('ticketPanel'); const paceAlert = document.getElementById('paceAlert');
-            const caballosFiltrados = caballos.filter(c => (filtro === "TODOS" || c.hipodromo === filtro) && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
+            
+            // El podio también debe respetar los filtros
+            let caballosFiltrados = caballos.filter(c => c.hipodromo === filtroHipo && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
+            if (filtroCar !== "TODAS") {
+                caballosFiltrados = caballosFiltrados.filter(c => c.carrera === parseInt(filtroCar));
+            }
+
             if (caballosFiltrados.length === 0) { panel.style.display = 'none'; ticketPanel.style.display = 'none'; paceAlert.style.display = 'none'; return; }
             panel.style.display = 'flex'; ticketPanel.style.display = 'flex';
-            const ultimaCarrera = caballosFiltrados[caballosFiltrados.length - 1].carrera; const hipodromoAct = caballosFiltrados[caballosFiltrados.length - 1].hipodromo;
-            const topCarrera = caballos.filter(c => c.hipodromo === hipodromoAct && c.carrera === ultimaCarrera && c.ranking && c.ranking !== "-" && !c.scratched).sort((a,b) => a.ranking - b.ranking);
+            
+            // Ordenar y tomar los 4 primeros para el podio
+            const topCarrera = caballosFiltrados.sort((a,b) => a.ranking - b.ranking).slice(0, 4);
+            
             const p1 = topCarrera[0]; const p2 = topCarrera[1]; const p3 = topCarrera[2]; const p4 = topCarrera[3];
             const getHorseName = (h) => h ? `<span style="font-size:18px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:12px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
+            
             document.getElementById('podio1').innerHTML = getHorseName(p1); document.getElementById('podio2').innerHTML = getHorseName(p2); document.getElementById('podio3').innerHTML = getHorseName(p3);
+            
             if (p1) {
                 document.getElementById('bar1').style.width = '100%';
                 if (p2) { const diff2 = parseFloat(p2.tpAjustado) - parseFloat(p1.tpAjustado); document.getElementById('bar2').style.width = `${Math.max(10, 100 - (diff2 * 20))}%`; }
@@ -644,7 +659,7 @@
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n"); const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "resultados_hipicos.csv"); document.body.appendChild(link); link.click(); link.remove();
         }
 
-        initHipodromos(); actualizarFiltro(); renderTabla();
+        initHipodromos(); actualizarFiltroCarreras(); renderTabla();
     </script>
 </body>
 </html>
