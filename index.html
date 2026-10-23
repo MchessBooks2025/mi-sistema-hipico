@@ -108,17 +108,17 @@
         .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 18px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
         .btn-scratch:hover { background: rgba(255,255,255,0.1); }
 
-        /* ESTILOS DEL NUEVO FORMULARIO (MODAL) */
+        /* ESTILOS DEL FORMULARIO GRANDE */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 25px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 25px; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { color: #60a5fa; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 22px;}
         
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         .form-group input, .form-group select { padding: 12px; font-size: 16px; }
         
-        .form-section-title { grid-column: 1 / -1; font-size: 14px; color: var(--gold); font-weight: bold; margin-top: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
+        .form-section-title { grid-column: 1 / -1; font-size: 15px; color: var(--gold); font-weight: bold; margin-top: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
         
         .btn-save { background: var(--success); color: white; padding: 15px; font-size: 18px; width: 100%; margin-top: 20px; border-radius: 6px; cursor: pointer; border: none; font-weight: bold;}
         .btn-save:hover { filter: brightness(1.1); }
@@ -129,7 +129,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v17.0 - Entrada Fácil</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v18.0 - Formulario Mejorado</div>
     </header>
 
     <div class="top-dashboard">
@@ -200,7 +200,7 @@
         </table>
     </div>
 
-    <!-- FORMULARIO PARA AÑADIR CABALLO (MODAL GRANDE) -->
+    <!-- FORMULARIO PARA AÑADIR CABALLO (MODAL GRANDE CON 4 TIEMPOS) -->
     <div class="modal-overlay" id="modalFormulario">
         <div class="modal-content">
             <h2>🐎 Añadir Nuevo Caballo</h2>
@@ -228,7 +228,7 @@
                 </div>
             </div>
 
-            <div class="form-section-title">Tiempos y Distancias (Solo carreras válidas para hoy)</div>
+            <div class="form-section-title">Tiempos y Distancias (Mínimo 4 carreras)</div>
             <div class="form-grid">
                 <div class="form-group"><label>T1 (Tiempo 1)</label><input type="text" id="f_t1" placeholder="Ej: 70.4"></div>
                 <div class="form-group"><label>D1 (Distancia 1)</label><input type="number" id="f_d1" placeholder="Ej: 1400"></div>
@@ -238,6 +238,12 @@
                 
                 <div class="form-group"><label>T3 (Tiempo 3)</label><input type="text" id="f_t3" placeholder="Ej: 69.8"></div>
                 <div class="form-group"><label>D3 (Distancia 3)</label><input type="number" id="f_d3" placeholder="Ej: 1400"></div>
+
+                <div class="form-group"><label>T4 (Tiempo 4)</label><input type="text" id="f_t4" placeholder="Ej: 70.2"></div>
+                <div class="form-group"><label>D4 (Distancia 4)</label><input type="number" id="f_d4" placeholder="Ej: 1400"></div>
+
+                <div class="form-group"><label>T5 (Opcional)</label><input type="text" id="f_t5" placeholder="Ej: 70.1"></div>
+                <div class="form-group"><label>D5 (Opcional)</label><input type="number" id="f_d5" placeholder="Ej: 1400"></div>
             </div>
 
             <button onclick="guardarCaballoDesdeFormulario()" class="btn-save">💾 Guardar Caballo</button>
@@ -301,8 +307,7 @@
             const dist = document.getElementById('distancia').value;
             if (!car || !dist) { alert("⚠️ Primero escribe la Carrera N° y la Distancia en la barra superior."); return; }
             document.getElementById('modalFormulario').style.display = 'flex';
-            // Limpiar campos
-            ['nro','name','kilos','puesto','ml','t1','d1','t2','d2','t3','d3'].forEach(id => document.getElementById('f_'+id).value = '');
+            ['nro','name','kilos','puesto','ml','t1','d1','t2','d2','t3','d3','t4','d4','t5','d5'].forEach(id => document.getElementById('f_'+id).value = '');
         }
 
         function cerrarFormularioCaballo() { document.getElementById('modalFormulario').style.display = 'none'; }
@@ -323,7 +328,8 @@
                 t1: document.getElementById('f_t1').value, d1: document.getElementById('f_d1').value,
                 t2: document.getElementById('f_t2').value, d2: document.getElementById('f_d2').value,
                 t3: document.getElementById('f_t3').value, d3: document.getElementById('f_d3').value,
-                t4: '', d4: '', t5: '', d5: '',
+                t4: document.getElementById('f_t4').value, d4: document.getElementById('f_d4').value,
+                t5: document.getElementById('f_t5').value, d5: document.getElementById('f_d5').value,
                 notes: '', tip: '', jockey_name: '', trainer_name: '', j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
                 style: '', quirin: '', tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
