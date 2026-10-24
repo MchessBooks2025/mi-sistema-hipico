@@ -112,11 +112,32 @@
         <div class="panel-config">
             <div class="config-group">
                 <label>Hipódromo</label>
-                <select id="filtroHipodromo" onchange="actualizarFiltroCarreras(); recalcularTodo();">
-                    <option value="La Rinconada">La Rinconada</option>
-                    <option value="Parx Racing">Parx Racing</option>
-                    <option value="Mountaineer">Mountaineer</option>
-                    <option value="Finger Lakes">Finger Lakes</option>
+                <select id="filtroHipodromo" onchange="recalcularTodo()">
+                    <optgroup label="Venezuela">
+                        <option value="La Rinconada">La Rinconada</option>
+                    </optgroup>
+                    <optgroup label="Estados Unidos">
+                        <option value="Aqueduct">Aqueduct</option>
+                        <option value="Belmont Park">Belmont Park</option>
+                        <option value="Churchill Downs">Churchill Downs</option>
+                        <option value="Del Mar">Del Mar</option>
+                        <option value="Fair Grounds">Fair Grounds</option>
+                        <option value="Finger Lakes">Finger Lakes</option>
+                        <option value="Gulfstream Park">Gulfstream Park</option>
+                        <option value="Keeneland">Keeneland</option>
+                        <option value="Laurel Park">Laurel Park</option>
+                        <option value="Los Alamitos">Los Alamitos</option>
+                        <option value="Monmouth Park">Monmouth Park</option>
+                        <option value="Mountaineer">Mountaineer</option>
+                        <option value="Oaklawn Park">Oaklawn Park</option>
+                        <option value="Parx Racing">Parx Racing</option>
+                        <option value="Pimlico">Pimlico</option>
+                        <option value="Santa Anita Park">Santa Anita Park</option>
+                        <option value="Saratoga">Saratoga</option>
+                        <option value="Tampa Bay Downs">Tampa Bay Downs</option>
+                        <option value="Turfway Park">Turfway Park</option>
+                        <option value="Woodbine">Woodbine</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="config-group">
