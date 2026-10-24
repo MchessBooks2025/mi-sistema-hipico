@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritmo Piño Piño (TP)</title>
+    <style>
+        :root {
+            --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --accent: #3b82f6; --success: #10b981;
+            --warning: #f59e0b; --danger: #ef4444; --border: #334155;
+            --gold: #fbbf24; --star: #fbbf24;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-main); padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 1000px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border); }
+        h1 { font-size: 24px; font-weight: 700; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* PANEL DE CONTROL */
+        .panel-config {
+            background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px;
+            margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;
+        }
+        .config-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+        .config-group label { font-size: 12px; color: var(--gold); font-weight: bold; text-transform: uppercase; }
+        input { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px; font-size: 15px; outline: none; width: 100%; }
+        input:focus { border-color: var(--accent); }
+
+        .btn-add { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; height: 42px; }
+        .btn-add:hover { filter: brightness(1.1); }
+        .btn-calc { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; height: 42px; width: 100%; }
+        .btn-calc:hover { filter: brightness(1.1); }
+
+        /* TABLA */
+        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background-color: #1e293b; color: var(--text-muted); font-weight: 600; font-size: 11px; padding: 12px; text-align: center; border-bottom: 2px solid var(--border); text-transform: uppercase; }
+        td { padding: 8px; text-align: center; border-bottom: 1px solid var(--border); }
+        tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
+
+        /* RESULTADOS */
+        .resultado-panel {
+            background-color: var(--panel-bg); border: 1px solid var(--accent); border-radius: 8px;
+            padding: 20px; display: none; text-align: center; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .resultado-panel h3 { color: var(--accent); margin-bottom: 10px; font-size: 18px; text-transform: uppercase; }
+        .tp-grande { font-size: 48px; font-weight: bold; color: var(--gold); margin: 10px 0; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .rango-texto { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+
+        .rank-box { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; border-radius: 8px; padding: 15px; margin: 0 5px; min-width: 120px; border: 1px solid var(--border); }
+        .rank-pos { font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 5px; }
+        .rank-nro { font-size: 24px; font-weight: bold; color: white; }
+        .rank-time { font-size: 16px; color: var(--success); margin-top: 5px; font-family: monospace; }
+        .rank-stars { color: var(--star); font-size: 16px; letter-spacing: 2px; margin-top: 5px;}
+
+        .bg-1 { border-color: var(--success); background-color: rgba(16, 185, 129, 0.1); }
+        .bg-2 { border-color: var(--warning); background-color: rgba(245, 158, 11, 0.1); }
+        .bg-3 { border-color: #f97316; background-color: rgba(249, 115, 22, 0.1); }
+
+        .text-star { color: var(--star); font-weight: bold; letter-spacing: 2px; }
+        .btn-back { background: transparent; color: white; border: 1px solid var(--border); padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🧠 Algoritmo Piño Piño</h1>
+            <a href="index.html" class="btn-back">⬅ Volver</a>
+        </header>
+
+        <div class="panel-config">
+            <div class="config-group">
+                <label>Distancia (mts)</label>
+                <input type="number" id="distancia" placeholder="Ej: 1100">
+            </div>
+            <button onclick="agregarFila()" class="btn-add" style="flex: 0.5;">➕ Añadir Caballo</button>
+            <button onclick="calcularTodo()" class="btn-calc" style="flex: 1;">⚡ Calcular TP y Estrellas</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Ejemplar</th>
+                        <th>Tiempo Promedio (TP)</th>
+                        <th>Estrellas Piño</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCuerpo"></tbody>
+            </table>
+        </div>
+
+        <!-- PANEL DE RESULTADOS DEL ALGORITMO -->
+        <div class="resultado-panel" id="panelResultados">
+            <h3>Análisis del Lote</h3>
+            <div class="tp-grande" id="resTP">--</div>
+            <div class="rango-texto" id="resRango"></div>
+            
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;" id="contenedorTop3">
+                <!-- Aquí van los top 3 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let caballos = [];
+
+        function agregarFila() {
+            const nuevo = { id: Date.now(), nro: '', nombre: '', tp: '', stars: '' };
+            caballos.push(nuevo);
+            renderTabla();
+        }
+
+        function eliminarFila(id) {
+            caballos = caballos.filter(c => c.id !== id);
+            renderTabla();
+        }
+
+        function actualizar(id, campo, valor) {
+            const cab = caballos.find(c => c.id === id);
+            if (cab) { cab[campo] = valor; renderTabla(); }
+        }
+
+        function renderTabla() {
+            const tbody = document.getElementById('tablaCuerpo');
+            tbody.innerHTML = '';
+            caballos.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="number" value="${c.nro}" onchange="actualizar(${c.id}, 'nro', this.value)" style="width: 60px; text-align:center;"></td>
+                    <td><input type="text" value="${c.nombre}" onchange="actualizar(${c.id}, 'nombre', this.value)" style="text-align:left;"></td>
+                    <td><input type="number" step="0.01" value="${c.tp}" onchange="actualizar(${c.id}, 'tp', this.value)" style="text-align:center;"></td>
+                    <td class="text-star">${c.stars || ''}</td>
+                    <td><button onclick="eliminarFila(${c.id})" style="background:transparent; border:none; color:var(--danger); cursor:pointer; font-size:18px;">🗑️</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calcularTodo() {
+            let validos = caballos.filter(c => c.tp !== '' && !isNaN(parseFloat(c.tp)));
+            
+            if (validos.length === 0) { alert("Por favor, agrega caballos con sus TPs."); return; }
+
+            // 1. Ordenar del más rápido (menor tiempo) al más lento
+            validos.sort((a, b) => parseFloat(a.tp) - parseFloat(b.tp));
+            const lider = validos[0];
+
+            // 2. Asignar Estrellas según la diferencia con el líder (Rango 1 seg)
+            validos.forEach(c => {
+                const dif = parseFloat(c.tp) - parseFloat(lider.tp);
+                if (dif <= 0.20) c.stars = '***';
+                else if (dif <= 0.50) c.stars = '**';
+                else if (dif <= 1.00) c.stars = '*';
+                else c.stars = 'Desc';
+            });
+
+            // 3. Calcular el TP del Piño (Promedio de los 3 mejores + 0.50s de margen)
+            let top3 = validos.slice(0, 3);
+            let suma = top3.reduce((acc, val) => acc + parseFloat(val.tp), 0);
+            let promedio = suma / top3.length;
+            let tpFinal = promedio + 0.50;
+
+            // 4. Mostrar en pantalla
+            document.getElementById('panelResultados').style.display = 'block';
+            document.getElementById('resTP').innerText = tpFinal.toFixed(2);
+            
+            const limiteRango = parseFloat(lider.tp) + 1.00;
+            document.getElementById('resRango').innerHTML = `Rango de la carrera: <b>${lider.tp}</b> a <b>${limiteRango.toFixed(2)}</b> (1 seg / 5 cps).`;
+
+            let htmlTop3 = '';
+            top3.forEach((c, index) => {
+                htmlTop3 += `
+                    <div class="rank-box bg-${index+1}">
+                        <div class="rank-pos">${index === 0 ? '🏆 1er Lugar' : index === 1 ? '🥈 2do Lugar' : '🥉 3er Lugar'}</div>
+                        <div class="rank-nro">#${c.nro}</div>
+                        <div class="rank-time">${c.tp}</div>
+                        <div class="rank-stars">${c.stars}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('contenedorTop3').innerHTML = htmlTop3;
+
+            renderTabla();
+        }
+    </script>
+</body>
+</html>
