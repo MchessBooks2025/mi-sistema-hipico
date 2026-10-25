@@ -76,13 +76,6 @@
         }
         .btn-calc:hover { background: #db2777; }
 
-        /* BOTÓN DE PIÑO PIÑO (MORADO) */
-        .btn-pino { 
-            background: #8b5cf6; color: white; text-decoration: none; padding: 10px 16px; 
-            border-radius: 4px; font-weight: 600; font-size: 14px; display: flex; align-items: center; transition: 0.2s;
-        }
-        .btn-pino:hover { background: #7c3aed; }
-
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
         
         table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
@@ -143,7 +136,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v22.0 - Restaurado con Botones</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v22.0 - Calculadora Integrada</div>
     </header>
 
     <div class="top-dashboard">
@@ -180,11 +173,8 @@
             <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
             
-            <!-- BOTÓN CALCULADORA -->
+            <!-- EL ÚNICO BOTÓN EXTRA: LA CALCULADORA -->
             <a href="calculadora.html" target="_blank" class="btn-calc">🧮 Calculadora</a>
-            
-            <!-- BOTÓN PIÑO PIÑO -->
-            <a href="pinopino.html" target="_blank" class="btn-pino">🧠 Piño Piño</a>
         </div>
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
             <input type="number" id="carrera" placeholder="Carrera N°" style="width: 100px; font-size: 14px;">
