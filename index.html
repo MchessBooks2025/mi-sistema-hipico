@@ -60,7 +60,7 @@
         input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 10px 12px; border-radius: 4px; font-size: 14px; outline: none; transition: border-color 0.2s; width: 100%; }
         input:focus, select:focus { border-color: var(--accent); }
 
-        button { padding: 10px 16px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 14px; }
+        button, .btn-link { padding: 10px 16px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 14px; text-decoration: none; }
         .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); }
         .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); }
         .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
@@ -71,18 +71,17 @@
         
         /* BOTÓN DE LA CALCULADORA (ROSA) */
         .btn-calc { 
-            background: #ec4899; 
-            color: white; 
-            text-decoration: none; 
-            padding: 10px 16px; 
-            border-radius: 4px; 
-            font-weight: 600; 
-            font-size: 14px; 
-            display: flex; 
-            align-items: center; 
-            transition: 0.2s;
+            background: #ec4899; color: white; text-decoration: none; padding: 10px 16px; 
+            border-radius: 4px; font-weight: 600; font-size: 14px; display: flex; align-items: center; transition: 0.2s;
         }
         .btn-calc:hover { background: #db2777; }
+
+        /* BOTÓN DE PIÑO PIÑO (MORADO) */
+        .btn-pino { 
+            background: #8b5cf6; color: white; text-decoration: none; padding: 10px 16px; 
+            border-radius: 4px; font-weight: 600; font-size: 14px; display: flex; align-items: center; transition: 0.2s;
+        }
+        .btn-pino:hover { background: #7c3aed; }
 
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
         
@@ -144,7 +143,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v21.0 - Botón Calculadora</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v22.0 - Botón Piño Piño</div>
     </header>
 
     <div class="top-dashboard">
@@ -181,8 +180,11 @@
             <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
             
-            <!-- EL NUEVO BOTÓN DE LA CALCULADORA -->
+            <!-- BOTÓN CALCULADORA -->
             <a href="calculadora.html" target="_blank" class="btn-calc">🧮 Calculadora</a>
+            
+            <!-- BOTÓN PIÑO PIÑO -->
+            <a href="pinopino.html" target="_blank" class="btn-pino">🧠 Piño Piño</a>
         </div>
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
             <input type="number" id="carrera" placeholder="Carrera N°" style="width: 100px; font-size: 14px;">
@@ -225,7 +227,6 @@
     <div class="modal-overlay" id="modalFormulario">
         <div class="modal-content">
             <h2>🐎 Añadir Nuevo Caballo</h2>
-            
             <div class="form-grid">
                 <div class="form-group"><label>Nro del Caballo</label><input type="number" id="f_nro" placeholder="Ej: 1"></div>
                 <div class="form-group"><label>Nombre</label><input type="text" id="f_name" placeholder="Ej: First Class"></div>
@@ -238,16 +239,12 @@
             <div class="form-grid">
                 <div class="form-group"><label>T1 (Tiempo 1)</label><input type="text" id="f_t1" placeholder="Ej: 70.4"></div>
                 <div class="form-group"><label>D1 (Distancia 1)</label><input type="number" id="f_d1" placeholder="Ej: 1400"></div>
-                
                 <div class="form-group"><label>T2 (Tiempo 2)</label><input type="text" id="f_t2" placeholder="Ej: 71.0"></div>
                 <div class="form-group"><label>D2 (Distancia 2)</label><input type="number" id="f_d2" placeholder="Ej: 1400"></div>
-                
                 <div class="form-group"><label>T3 (Tiempo 3)</label><input type="text" id="f_t3" placeholder="Ej: 69.8"></div>
                 <div class="form-group"><label>D3 (Distancia 3)</label><input type="number" id="f_d3" placeholder="Ej: 1400"></div>
-
                 <div class="form-group"><label>T4 (Tiempo 4)</label><input type="text" id="f_t4" placeholder="Ej: 70.2"></div>
                 <div class="form-group"><label>D4 (Distancia 4)</label><input type="number" id="f_d4" placeholder="Ej: 1400"></div>
-
                 <div class="form-group"><label>T5 (Opcional)</label><input type="text" id="f_t5" placeholder="Ej: 70.1"></div>
                 <div class="form-group"><label>D5 (Opcional)</label><input type="number" id="f_d5" placeholder="Ej: 1400"></div>
             </div>
