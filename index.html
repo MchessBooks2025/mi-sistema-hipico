@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Hípico PRO | Dashboard Élite</title>
+    <title>Sistema Hípico PRO | Motor de Clases</title>
     <style>
         :root {
             --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
@@ -68,12 +68,7 @@
         .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); }
         .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
         .btn-info { background: #0ea5e9; color: white; } .btn-info:hover { background: #0284c7; }
-        
-        /* BOTÓN DE LA CALCULADORA (ROSA) */
-        .btn-calc { 
-            background: #ec4899; color: white; text-decoration: none; padding: 10px 16px; 
-            border-radius: 4px; font-weight: 600; font-size: 14px; display: flex; align-items: center; transition: 0.2s;
-        }
+        .btn-calc { background: #ec4899; color: white; text-decoration: none; padding: 10px 16px; border-radius: 4px; font-weight: 600; font-size: 14px; display: flex; align-items: center; transition: 0.2s; }
         .btn-calc:hover { background: #db2777; }
 
         .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
@@ -136,7 +131,7 @@
 
     <header>
         <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v22.0 - Calculadora Integrada</div>
+        <div style="color: var(--text-muted); font-size: 12px;">v24.0 - Motor de Clases</div>
     </header>
 
     <div class="top-dashboard">
@@ -173,12 +168,12 @@
             <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
             
-            <!-- EL ÚNICO BOTÓN EXTRA: LA CALCULADORA -->
             <a href="calculadora.html" target="_blank" class="btn-calc">🧮 Calculadora</a>
         </div>
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
-            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 100px; font-size: 14px;">
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 120px; font-size: 14px;">
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px; font-size: 14px;">
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px; font-size: 14px;">
+            <input type="text" id="lote_hoy" placeholder="Clase Hoy (ej: clm 12500b)" style="width: 160px; font-size: 14px; color: var(--gold); font-weight: bold;" onchange="calcularTodo()">
             <button onclick="abrirFormularioCaballo()" class="btn-primary" style="width: auto; padding: 10px 20px;">➕ Añadir Caballo</button>
         </div>
     </div>
@@ -205,6 +200,8 @@
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Pto</th><th>Kg</th><th>Sty</th><th>Q</th><th>ML</th>
+                    <th style="color: var(--warning);">Clase Ant.</th>
+                    <th style="color: var(--success);">Aju. Lote</th>
                     <th>TP</th><th>Aju</th><th>TP A</th><th>Rk</th><th>Dif</th><th>Est</th>
                     <th>Alerta</th><th>Tips</th><th>Notas</th>
                 </tr>
@@ -223,6 +220,7 @@
                 <div class="form-group"><label>Kilos</label><input type="number" step="0.1" id="f_kilos" placeholder="Ej: 55.3"></div>
                 <div class="form-group"><label>Puesto (PP)</label><input type="number" id="f_puesto" placeholder="Ej: 1"></div>
                 <div class="form-group"><label>Morning Line (ML)</label><input type="text" id="f_ml" placeholder="Ej: 5/2"></div>
+                <div class="form-group"><label>Clase Anterior (Lote)</label><input type="text" id="f_lote" placeholder="Ej: alw4000s"></div>
             </div>
 
             <div class="form-section-title">Tiempos y Distancias (Mínimo 4 carreras)</div>
@@ -295,6 +293,30 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
+        // --- EL MOTOR DE CLASES ---
+        function getClassScore(loteStr) {
+            if (!loteStr) return NaN;
+            let s = loteStr.toString().toLowerCase().trim();
+            
+            let base = 0;
+            if (s.includes('md')) base = 10;         // Maiden
+            else if (s.includes('str')) base = 15;   // Starter
+            else if (s.includes('clm')) base = 20;   // Claiming
+            else if (s.includes('oc')) base = 30;    // Optional Claiming
+            else if (s.includes('alw')) base = 40;   // Allowance
+            else if (s.includes('stk')) base = 50;   // Stakes
+            else base = 20; // Default a Claiming si no se reconoce
+
+            // Extraer el número (el valor/purse)
+            let match = s.match(/\d+/);
+            let value = match ? parseInt(match[0]) : 0;
+            
+            // Convertir a un decimal (ej. 12500 -> 12.5)
+            let valScore = value / 1000;
+
+            return base + valScore;
+        }
+
         function actualizarFiltroCarreras() {
             const select = document.getElementById('filtroCarrera');
             const valorActual = select.value;
@@ -310,7 +332,7 @@
             const dist = document.getElementById('distancia').value;
             if (!car || !dist) { alert("⚠️ Primero escribe la Carrera N° y la Distancia en la barra superior."); return; }
             document.getElementById('modalFormulario').style.display = 'flex';
-            ['nro','name','kilos','puesto','ml','t1','d1','t2','d2','t3','d3','t4','d4','t5','d5'].forEach(id => document.getElementById('f_'+id).value = '');
+            ['nro','name','kilos','puesto','ml','lote','t1','d1','t2','d2','t3','d3','t4','d4','t5','d5'].forEach(id => document.getElementById('f_'+id).value = '');
         }
 
         function cerrarFormularioCaballo() { document.getElementById('modalFormulario').style.display = 'none'; }
@@ -325,6 +347,7 @@
                 scratched: false, 
                 nro: document.getElementById('f_nro').value, name: document.getElementById('f_name').value,
                 kilos: document.getElementById('f_kilos').value, puesto: document.getElementById('f_puesto').value, ml: document.getElementById('f_ml').value,
+                lote: document.getElementById('f_lote').value,
                 t1: document.getElementById('f_t1').value, d1: document.getElementById('f_d1').value,
                 t2: document.getElementById('f_t2').value, d2: document.getElementById('f_d2').value,
                 t3: document.getElementById('f_t3').value, d3: document.getElementById('f_d3').value,
@@ -364,6 +387,7 @@
                             t1: item.t1 || '', t2: item.t2 || '', t3: item.t3 || '', t4: item.t4 || '', t5: item.t5 || '', 
                             d1: item.d1 || distancia, d2: item.d2 || '', d3: item.d3 || '', d4: item.d4 || '', d5: item.d5 || '',
                             puesto: item.puesto || '', kilos: item.kilos || '', style: '', quirin: '', ml: item.ml || '',
+                            lote: item.lote || '',
                             tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
                         }); agregados++;
                     });
@@ -533,6 +557,8 @@
                     <td><select onchange="actualizarDato(${c.id}, 'style', this.value)" ${c.scratched ? 'disabled' : ''}><option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option><option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option><option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option></select></td>
                     <td><input type="number" value="${c.quirin || ''}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.ml || ''}" onchange="actualizarDato(${c.id}, 'ml', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="text" value="${c.lote || ''}" onchange="actualizarDato(${c.id}, 'lote', this.value)" placeholder="Ej: alw4000" style="color: var(--warning); font-weight: bold;" ${c.scratched ? 'disabled' : ''}></td>
+                    <td style="font-weight: bold; color: ${c.ajusteLote > 0 ? 'var(--danger)' : c.ajusteLote < 0 ? 'var(--success)' : 'var(--text-muted)'};">${c.ajusteLote ? (c.ajusteLote > 0 ? '+' : '') + c.ajusteLote.toFixed(2) : '0.00'}</td>
                     <td class="${c.tpReal === 'S/D' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
                     <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
                     <td class="${c.tpAjustado === 'S/D' ? 'text-sindatos' : 'text-destacado'}" style="color: #c084fc;">${c.tpAjustado}</td>
@@ -593,16 +619,37 @@
 
         function calcularTodo() {
             if(caballos.length === 0) return;
+            
+            // Obtenemos el score de la clase de hoy
+            const loteHoyStr = document.getElementById('lote_hoy').value;
+            const loteHoyScore = getClassScore(loteHoyStr);
+
             caballos.forEach(c => {
-                if (c.scratched) { c.tpReal = "Ret."; c.ajuste = "-"; c.tpAjustado = "Ret."; c.ranking = "-"; c.dif = "-"; c.est = "-"; c.alerta = ""; c.efec_equipo = "-"; return; }
+                if (c.scratched) { c.tpReal = "Ret."; c.ajuste = "-"; c.tpAjustado = "Ret."; c.ranking = "-"; c.dif = "-"; c.est = "-"; c.alerta = ""; c.efec_equipo = "-"; c.ajusteLote = 0; return; }
                 const tiempos = [parseTiempo(c.t1), parseTiempo(c.t2), parseTiempo(c.t3), parseTiempo(c.t4), parseTiempo(c.t5)];
                 const distancias = [parseFloat(c.d1), parseFloat(c.d2), parseFloat(c.d3), parseFloat(c.d4), parseFloat(c.d5)];
                 let tiemposValidos = [];
                 for(let i=0; i<5; i++) { if(distancias[i] === c.distanciaHoy && !isNaN(tiempos[i])) tiemposValidos.push(tiempos[i]); }
                 c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "S/D";
-                let ajuste = 0; const kilos = parseFloat(c.kilos); const puesto = parseFloat(c.puesto);
+                
+                let ajuste = 0; 
+                const kilos = parseFloat(c.kilos); 
+                const puesto = parseFloat(c.puesto);
+                
                 if(!isNaN(kilos) && kilos > 0) ajuste += (kilos - 54) * 0.2;
                 if(!isNaN(puesto) && puesto > 0) { if(puesto <= 3) ajuste -= 0.2; else if(puesto >= 8) ajuste += 0.3; }
+                
+                // CÁLCULO AUTOMÁTICO DEL LOTE
+                c.ajusteLote = 0;
+                if (!isNaN(loteHoyScore)) {
+                    const loteAnteriorScore = getClassScore(c.lote);
+                    if (!isNaN(loteAnteriorScore)) {
+                        // Diferencia de clases * factor (0.05 seg por punto)
+                        c.ajusteLote = (loteHoyScore - loteAnteriorScore) * 0.05;
+                        ajuste += c.ajusteLote;
+                    }
+                }
+                
                 const jWin = parseFloat(c.j_win); const jPlace = parseFloat(c.j_place); const tWin = parseFloat(c.t_win); const tPlace = parseFloat(c.t_place);
                 let avgWin = NaN, avgPlace = NaN; let hasWin = false, hasPlace = false;
                 if (!isNaN(jWin) && !isNaN(tWin)) { avgWin = (jWin + tWin) / 2; hasWin = true; } else if (!isNaN(jWin)) { avgWin = jWin; hasWin = true; } else if (!isNaN(tWin)) { avgWin = tWin; hasWin = true; }
