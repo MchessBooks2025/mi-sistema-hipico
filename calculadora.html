@@ -3,362 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Pro USA | ML & Barras</title>
+    <title>Calculadora Hípica PRO | Motor de Clases</title>
     <style>
         :root {
             --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
             --text-muted: #94a3b8; --accent: #3b82f6; --accent-hover: #2563eb;
             --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
-            --border: #334155; --gold: #fbbf24; --valor: #c084fc;
+            --border: #334155; --valor: #c084fc; --gold: #fbbf24; --elite: #e879f9;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-color); color: var(--text-main); padding: 20px; font-size: 14px;
-            width: 100vw; overflow-x: hidden; display: flex; justify-content: center;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color); color: var(--text-main); padding: 15px; font-size: 14px;
+            width: 100vw; overflow-x: hidden;
         }
-
-        .container { width: 100%; max-width: 1100px; }
-
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border); }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
         h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 12px; color: var(--text-muted); }
 
-        /* PODIO TOP 3 */
-        .podio-panel {
-            background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px;
-            padding: 15px 20px; margin-bottom: 20px; display: none; gap: 20px; justify-content: space-around;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; }
+        .panel h2 { font-size: 15px; color: var(--gold); margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .form-group input, .form-group select {
+            background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main);
+            padding: 10px 12px; border-radius: 4px; font-size: 14px; outline: none; width: 100%;
         }
-        .podio-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .podio-title { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .pos-1 { color: var(--success); }
-        .pos-2 { color: var(--warning); }
-        .pos-3 { color: #f97316; }
-        .podio-horse { font-size: 16px; font-weight: bold; color: white; }
-        .podio-time { font-size: 14px; color: var(--text-muted); }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
 
-        /* CONTROLES */
-        .panel-config {
-            background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px;
-            margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        .btn-calcular {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; border: none;
+            padding: 15px 40px; border-radius: 6px; font-size: 18px; font-weight: bold;
+            cursor: pointer; transition: 0.2s; display: block; margin: 0 auto; width: 100%; max-width: 400px;
         }
-        
-        .config-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
-        .config-group label { font-size: 12px; color: var(--gold); font-weight: bold; text-transform: uppercase; }
-        
-        input, select { 
-            background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); 
-            padding: 10px; border-radius: 6px; font-size: 15px; outline: none; width: 100%;
+        .btn-calcular:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+        .resultado-final {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid var(--accent); border-radius: 10px; padding: 20px;
+            text-align: center; margin-top: 15px;
         }
-        input:focus, select:focus { border-color: var(--accent); }
+        .resultado-final .tp-final { font-size: 42px; font-weight: 900; color: var(--elite); letter-spacing: 2px; }
+        .resultado-final .tp-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
+        .resultado-final .tp-real { font-size: 16px; color: var(--text-muted); margin-top: 8px; }
 
-        .btn-add { 
-            background: var(--accent); color: white; border: none; padding: 10px 20px; 
-            border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; transition: 0.2s;
-            height: 42px; display: flex; align-items: center; justify-content: center;
+        .breakdown { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 15px; font-size: 13px; }
+        .breakdown .item { text-align: left; color: var(--text-muted); }
+        .breakdown .valor { text-align: right; font-weight: bold; font-family: 'Courier New', monospace; }
+        .val-pos { color: var(--danger); }
+        .val-neg { color: var(--success); }
+        .val-neutro { color: var(--text-muted); }
+
+        .alerta-badge {
+            display: inline-block; padding: 6px 14px; border-radius: 20px; font-weight: 700;
+            font-size: 12px; letter-spacing: 1px; margin-top: 12px;
         }
-        .btn-add:hover { background: var(--accent-hover); }
-        
-        .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; height: 42px; transition: 0.2s;}
-        .btn-danger:hover { background: var(--danger); color: white; }
-
-        /* TABLA */
-        .table-wrapper { 
-            background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; 
-            overflow-x: auto; width: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 900px; }
-        th { 
-            background-color: #1e293b; color: var(--text-muted); font-weight: 600; 
-            text-transform: uppercase; font-size: 11px; padding: 15px 10px; 
-            text-align: center; border-bottom: 2px solid var(--border);
-        }
-        td { padding: 8px; text-align: center; border-bottom: 1px solid var(--border); }
-        tr:hover td { background-color: rgba(59, 130, 246, 0.05); }
-
-        /* COLORES DEL RANKING */
-        .rank-1 td { background-color: rgba(16, 185, 129, 0.15); }
-        .rank-2 td { background-color: rgba(245, 158, 11, 0.15); }
-        .rank-3 td { background-color: rgba(249, 115, 22, 0.15); }
-
-        /* BARRA VISUAL */
-        .bar-container { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 5px;}
-        .bar-fill { height: 100%; transition: width 0.3s; }
-        .bar-fill.leader { background: var(--success); }
-        .bar-fill.second { background: var(--warning); }
-        .bar-fill.third { background: #f97316; }
-        .bar-fill.other { background: #64748b; }
-
-        .resultado { font-size: 18px; font-weight: bold; color: white; display: block; }
-        .formula-text { font-size: 10px; color: var(--text-muted); display: block; }
-        
-        /* ALERTAS */
-        .val-alerta { display: inline-block; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 10px; letter-spacing: 0.5px; }
-        .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); box-shadow: 0 0 8px rgba(192, 132, 252, 0.4); }
+        .alerta-elite { background-color: rgba(232, 121, 249, 0.2); color: var(--elite); border: 1px solid var(--elite); }
+        .alerta-frio { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #60a5fa; }
+        .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); }
         .alerta-trampa { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .alerta-none { display: none; }
 
-        .btn-delete { background: transparent; color: var(--danger); border: none; font-size: 18px; cursor: pointer; transition: 0.2s; }
-        .btn-delete:hover { color: #ff6b6b; transform: scale(1.1); }
+        .stats-info {
+            background: rgba(59, 130, 246, 0.08); border-left: 3px solid var(--accent);
+            padding: 10px 12px; border-radius: 4px; font-size: 12px; color: var(--text-muted); margin-top: 10px;
+        }
 
-        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
+        .error-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; font-weight: bold; }
 
-        .btn-back { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.2s;}
-        .btn-back:hover { background: var(--border); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .fila-tiempos { display: grid; grid-template-columns: 40px 1fr 1fr; gap: 8px; align-items: center; margin-bottom: 6px; }
+        .fila-tiempos .nro { color: var(--gold); font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>🧮 Calculadora Pro USA</h1>
-            <a href="index.html" class="btn-back">⬅ Volver al Sistema</a>
-        </header>
+    <header>
+        <h1>🧮 CALCULADORA HÍPICA PRO</h1>
+        <div class="subtitle">Motor de Clases · Cálculo Individual</div>
+    </header>
 
-        <div class="panel-config">
-            <div class="config-group">
-                <label>Hipódromo (USA)</label>
-                <select id="filtroHipodromo" onchange="recalcularTodo()">
-                    <option value="Aqueduct">Aqueduct</option>
-                    <option value="Belmont Park">Belmont Park</option>
-                    <option value="Churchill Downs">Churchill Downs</option>
-                    <option value="Del Mar">Del Mar</option>
-                    <option value="Fair Grounds">Fair Grounds</option>
-                    <option value="Finger Lakes">Finger Lakes</option>
-                    <option value="Gulfstream Park">Gulfstream Park</option>
-                    <option value="Keeneland">Keeneland</option>
-                    <option value="Laurel Park">Laurel Park</option>
-                    <option value="Los Alamitos">Los Alamitos</option>
-                    <option value="Monmouth Park">Monmouth Park</option>
-                    <option value="Mountaineer">Mountaineer</option>
-                    <option value="Oaklawn Park">Oaklawn Park</option>
-                    <option value="Parx Racing">Parx Racing</option>
-                    <option value="Pimlico">Pimlico</option>
-                    <option value="Santa Anita Park">Santa Anita Park</option>
-                    <option value="Saratoga">Saratoga</option>
-                    <option value="Tampa Bay Downs">Tampa Bay Downs</option>
-                    <option value="Turfway Park">Turfway Park</option>
-                    <option value="Woodbine">Woodbine</option>
-                </select>
+    <!-- PANEL PRINCIPAL -->
+    <div class="panel">
+        <h2>📋 Datos Básicos de la Carrera</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Distancia Hoy (mts)</label>
+                <input type="number" id="distanciaHoy" placeholder="Ej: 1400" value="1400">
             </div>
-            <div class="config-group">
-                <label>Nro de Carrera</label>
-                <input type="number" id="filtroCarrera" placeholder="Ej: 1" onchange="recalcularTodo()">
+            <div class="form-group">
+                <label>Clase Hoy (Lote)</label>
+                <input type="text" id="loteHoy" placeholder="Ej: clm 12500b" value="clm 12500">
             </div>
-            <div class="config-group" style="border-left: 2px solid var(--border); padding-left: 15px;">
-                <label style="color: var(--success);">Distancia de HOY (mts)</label>
-                <input type="number" id="distancia_hoy" placeholder="Ej: 1207" onchange="recalcularTodo()">
-            </div>
-            
-            <button onclick="agregarFila()" class="btn-add" style="flex: 0.5;">➕ Añadir Caballo</button>
-            <button onclick="limpiarCarrera()" class="btn-danger" title="Borra solo los caballos de esta carrera">🗑️</button>
-        </div>
-
-        <div class="podio-panel" id="podioPanel">
-            <div class="podio-item"><div class="podio-title pos-1">🏆 1er Lugar</div><div class="podio-horse" id="podio1">-</div><div class="podio-time" id="podio1_time">-</div></div>
-            <div class="podio-item"><div class="podio-title pos-2">🥈 2do Lugar</div><div class="podio-horse" id="podio2">-</div><div class="podio-time" id="podio2_time">-</div></div>
-            <div class="podio-item"><div class="podio-title pos-3">🥉 3er Lugar</div><div class="podio-horse" id="podio3">-</div><div class="podio-time" id="podio3_time">-</div></div>
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Nro</th>
-                        <th>Ejemplar</th>
-                        <th>Último Tiempo</th>
-                        <th>Dist. Anterior</th>
-                        <th style="color: var(--gold);">Tiempo Proyectado</th>
-                        <th>Morning Line</th>
-                        <th>Alerta</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpoTabla"></tbody>
-            </table>
-            <div class="empty-state" id="emptyState">
-                Agrega caballos para empezar a calcular.
+            <div class="form-group">
+                <label>Clase Anterior (Lote)</label>
+                <input type="text" id="loteAnterior" placeholder="Ej: alw4000s" value="alw 4000">
             </div>
         </div>
     </div>
 
+    <!-- TIEMPOS Y DISTANCIAS -->
+    <div class="panel">
+        <h2>⏱️ Tiempos y Distancias (Mín. 4 carreras)</h2>
+        <div class="grid-2">
+            <div>
+                <div class="fila-tiempos"><span class="nro">1</span>
+                    <input type="text" id="t1" placeholder="T1 (ej: 70.4)">
+                    <input type="number" id="d1" placeholder="D1" value="1400">
+                </div>
+                <div class="fila-tiempos"><span class="nro">2</span>
+                    <input type="text" id="t2" placeholder="T2">
+                    <input type="number" id="d2" placeholder="D2" value="1400">
+                </div>
+                <div class="fila-tiempos"><span class="nro">3</span>
+                    <input type="text" id="t3" placeholder="T3">
+                    <input type="number" id="d3" placeholder="D3" value="1400">
+                </div>
+            </div>
+            <div>
+                <div class="fila-tiempos"><span class="nro">4</span>
+                    <input type="text" id="t4" placeholder="T4">
+                    <input type="number" id="d4" placeholder="D4" value="1400">
+                </div>
+                <div class="fila-tiempos"><span class="nro">5</span>
+                    <input type="text" id="t5" placeholder="T5 (opcional)">
+                    <input type="number" id="d5" placeholder="D5">
+                </div>
+            </div>
+        </div>
+        <div class="stats-info">
+            Solo se promedian los tiempos cuyas distancias coincidan con la <b>Distancia Hoy</b>. Soporta formato <code>1:10.4</code> o <code>70.4</code>.
+        </div>
+    </div>
+
+    <!-- PESO Y POSICIÓN -->
+    <div class="panel">
+        <h2>⚖️ Peso, Puesto y Stats del Equipo</h2>
+        <div class="form-grid">
+            <div class="form-group"><label>Kilos</label><input type="number" step="0.1" id="kilos" placeholder="Ej: 55.3"></div>
+            <div class="form-group"><label>Puesto (PP)</label><input type="number" id="puesto" placeholder="Ej: 1"></div>
+            <div class="form-group"><label>Jinete Win %</label><input type="number" step="0.1" id="jWin" placeholder="Ej: 25"></div>
+            <div class="form-group"><label>Jinete 1-2-3 %</label><input type="number" step="0.1" id="jPlace" placeholder="Ej: 50"></div>
+            <div class="form-group"><label>Entrenador Win %</label><input type="number" step="0.1" id="tWin" placeholder="Ej: 21"></div>
+            <div class="form-group"><label>Entrenador 1-2-3 %</label><input type="number" step="0.1" id="tPlace" placeholder="Ej: 46"></div>
+            <div class="form-group"><label>Morning Line (ML)</label><input type="text" id="ml" placeholder="Ej: 5/2"></div>
+        </div>
+    </div>
+
+    <!-- BOTÓN CALCULAR -->
+    <button class="btn-calcular" onclick="calcular()">🧮 Calcular Todo</button>
+
+    <!-- RESULTADO -->
+    <div id="panelResultado" style="display:none;">
+        <div class="resultado-final">
+            <div class="tp-label">Tiempo Ajustado Final (TP Ajustado)</div>
+            <div class="tp-final" id="tpFinal">--</div>
+            <div class="tp-real">TP Real (promedio): <b id="tpReal">--</b></div>
+            <div id="alertaBox" class="alerta-none"></div>
+        </div>
+
+        <div class="panel" style="margin-top:15px;">
+            <h2>🔍 Desglose de Ajustes</h2>
+            <div class="breakdown" id="breakdown"></div>
+        </div>
+    </div>
+
+    <div id="errorMsg" class="error-msg"></div>
+
     <script>
-        let filasCaballos = JSON.parse(localStorage.getItem('calculadoraUSA')) || [];
-        function guardar() { localStorage.setItem('calculadoraUSA', JSON.stringify(filasCaballos)); }
-
-        function agregarFila() {
-            const hipo = document.getElementById('filtroHipodromo').value;
-            const car = document.getElementById('filtroCarrera').value;
-            if (!car) { alert("⚠️ Primero escribe el Número de Carrera."); return; }
-
-            filasCaballos.push({
-                id: Date.now(), hipodromo: hipo, carrera: parseInt(car),
-                nro: '', nombre: '', tiempo: '', distancia_anterior: '', ml: ''
-            });
-            guardar(); recalcularTodo();
+        // ---- MOTOR (réplica exacta del index principal) ----
+        function getClassScore(loteStr) {
+            if (!loteStr) return NaN;
+            let s = loteStr.toString().toLowerCase().trim();
+            let base = 0;
+            if (s.includes('md')) base = 10;
+            else if (s.includes('str')) base = 15;
+            else if (s.includes('clm')) base = 20;
+            else if (s.includes('oc')) base = 30;
+            else if (s.includes('alw')) base = 40;
+            else if (s.includes('stk')) base = 50;
+            else base = 20;
+            let match = s.match(/\d+/);
+            let value = match ? parseInt(match[0]) : 0;
+            return base + (value / 1000);
         }
 
-        function eliminarFila(id) {
-            filasCaballos = filasCaballos.filter(c => c.id !== id);
-            guardar(); recalcularTodo();
-        }
-
-        function limpiarCarrera() {
-            const hipo = document.getElementById('filtroHipodromo').value;
-            const car = document.getElementById('filtroCarrera').value;
-            if (!car) return alert("Escribe el número de la carrera.");
-            if(confirm(`¿Borrar todos los caballos de la Carrera ${car}?`)) {
-                filasCaballos = filasCaballos.filter(c => !(c.hipodromo === hipo && c.carrera === parseInt(car)));
-                guardar(); recalcularTodo();
+        function parseTiempo(valor) {
+            if (!valor) return NaN;
+            valor = valor.toString().trim();
+            if (valor.includes(':')) {
+                const partes = valor.split(':');
+                return (parseFloat(partes[0]) * 60) + parseFloat(partes[1]);
             }
+            return parseFloat(valor);
         }
 
-        function actualizarDato(id, campo, valor) {
-            const caballo = filasCaballos.find(c => c.id === id);
-            if (caballo) {
-                caballo[campo] = valor;
-                guardar(); recalcularTodo();
-            }
-        }
-
-        // Función para convertir "5/2", "3/1" o "2.5" a número decimal
         function parseOdds(valor) {
             if (!valor) return NaN;
             valor = valor.toString().trim();
-            if (valor.includes('/')) {
-                const partes = valor.split('/');
+            if (valor.includes('/') || valor.includes('-')) {
+                const partes = valor.split(/[\/\-]/);
                 if (partes.length === 2) {
-                    const num = parseFloat(partes[0]);
-                    const den = parseFloat(partes[1]);
-                    if (!isNaN(num) && !isNaN(den) && den !== 0) return (num / den) + 1; 
+                    const num = parseFloat(partes[0]), den = parseFloat(partes[1]);
+                    if (!isNaN(num) && !isNaN(den) && den !== 0) return (num / den) + 1;
                 }
             }
             return parseFloat(valor);
         }
 
-        function recalcularTodo() {
-            const distHoy = parseFloat(document.getElementById('distancia_hoy').value);
-            const hipoActual = document.getElementById('filtroHipodromo').value;
-            const carActual = document.getElementById('filtroCarrera').value;
+        function calcular() {
+            const err = document.getElementById('errorMsg');
+            const panel = document.getElementById('panelResultado');
+            err.innerText = ''; panel.style.display = 'none';
 
-            // 1. Calcular proyecciones
-            filasCaballos.forEach(c => {
-                const t = parseFloat(c.tiempo);
-                const d_ant = parseFloat(c.distancia_anterior);
-                
-                c.proyeccion = null;
-                c.formula = "";
+            // --- 1) TP Real ---
+            const distanciaHoy = parseFloat(document.getElementById('distanciaHoy').value);
+            if (isNaN(distanciaHoy)) { err.innerText = '⚠️ Falta la Distancia Hoy.'; return; }
 
-                if (!isNaN(distHoy) && !isNaN(t) && !isNaN(d_ant) && d_ant > 0) {
-                    c.proyeccion = (t * distHoy) / d_ant;
-                    c.formula = `(${t} × ${distHoy}) / ${d_ant}`;
-                }
-            });
+            const tiempos = [1,2,3,4,5].map(i => parseTiempo(document.getElementById('t'+i).value));
+            const dists   = [1,2,3,4,5].map(i => parseFloat(document.getElementById('d'+i).value));
 
-            // 2. Asignar Ranking y diferencias
-            if (carActual) {
-                let caballosCarrera = filasCaballos.filter(c => c.hipodromo === hipoActual && c.carrera === parseInt(carActual) && c.proyeccion !== null);
-                caballosCarrera.sort((a,b) => a.proyeccion - b.proyeccion);
-                
-                if (caballosCarrera.length > 0) {
-                    const mejorTiempo = caballosCarrera[0].proyeccion;
-                    caballosCarrera.forEach((c, index) => {
-                        c.ranking = index + 1;
-                        c.dif = c.proyeccion - mejorTiempo; // Diferencia con el líder
-                    });
+            let validos = [];
+            for (let i = 0; i < 5; i++) {
+                if (dists[i] === distanciaHoy && !isNaN(tiempos[i])) validos.push(tiempos[i]);
+            }
+            if (validos.length === 0) {
+                err.innerText = '⚠️ No hay tiempos con distancia igual a la Distancia Hoy (' + distanciaHoy + 'm).';
+                return;
+            }
+            const tpReal = validos.reduce((a,b) => a+b, 0) / validos.length;
+
+            // --- 2) Desglose de ajustes ---
+            const ajustes = [];
+            let totalAjuste = 0;
+
+            const kilos = parseFloat(document.getElementById('kilos').value);
+            if (!isNaN(kilos) && kilos > 0) {
+                const a = (kilos - 54) * 0.2;
+                ajustes.push({ label: `Peso (${kilos} kg, base 54)`, val: a });
+                totalAjuste += a;
+            }
+
+            const puesto = parseFloat(document.getElementById('puesto').value);
+            if (!isNaN(puesto) && puesto > 0) {
+                let a = 0;
+                if (puesto <= 3) a = -0.2;
+                else if (puesto >= 8) a = 0.3;
+                ajustes.push({ label: `Puesto (PP ${puesto})`, val: a });
+                totalAjuste += a;
+            }
+
+            const loteHoyScore = getClassScore(document.getElementById('loteHoy').value);
+            const loteAntScore = getClassScore(document.getElementById('loteAnterior').value);
+            if (!isNaN(loteHoyScore) && !isNaN(loteAntScore)) {
+                const a = (loteHoyScore - loteAntScore) * 0.05;
+                ajustes.push({
+                    label: `Clase (${document.getElementById('loteAnterior').value} → ${document.getElementById('loteHoy').value})`,
+                    val: a,
+                    extra: `Score: ${loteAntScore.toFixed(1)} → ${loteHoyScore.toFixed(1)}`
+                });
+                totalAjuste += a;
+            }
+
+            // Equipo (jinete + entrenador)
+            const jWin = parseFloat(document.getElementById('jWin').value);
+            const jPlace = parseFloat(document.getElementById('jPlace').value);
+            const tWin = parseFloat(document.getElementById('tWin').value);
+            const tPlace = parseFloat(document.getElementById('tPlace').value);
+
+            let avgWin = NaN, avgPlace = NaN, hasWin = false, hasPlace = false;
+            if (!isNaN(jWin) && !isNaN(tWin)) { avgWin = (jWin + tWin)/2; hasWin = true; }
+            else if (!isNaN(jWin)) { avgWin = jWin; hasWin = true; }
+            else if (!isNaN(tWin)) { avgWin = tWin; hasWin = true; }
+            if (!isNaN(jPlace) && !isNaN(tPlace)) { avgPlace = (jPlace + tPlace)/2; hasPlace = true; }
+            else if (!isNaN(jPlace)) { avgPlace = jPlace; hasPlace = true; }
+            else if (!isNaN(tPlace)) { avgPlace = tPlace; hasPlace = true; }
+
+            let efecEquipo = '-', alerta = '';
+            if (hasWin || hasPlace) {
+                if (hasWin && hasPlace) {
+                    const aW = (15 - avgWin) * 0.02;
+                    const aP = (40 - avgPlace) * 0.01;
+                    ajustes.push({ label: `Jinete/Entrenador Win% (avg ${avgWin.toFixed(1)}%)`, val: aW });
+                    ajustes.push({ label: `Jinete/Entrenador Place% (avg ${avgPlace.toFixed(1)}%)`, val: aP });
+                    totalAjuste += aW + aP;
+                    efecEquipo = ((avgWin + avgPlace)/2).toFixed(1);
+                    if (avgWin >= 20 && avgPlace >= 45) alerta = 'EQUIPO ELITE';
+                    else if (avgWin < 10 && avgPlace < 30) alerta = 'EQUIPO FRIO';
+                } else if (hasWin) {
+                    const aW = (15 - avgWin) * 0.02;
+                    ajustes.push({ label: `Jinete/Entrenador Win% (avg ${avgWin.toFixed(1)}%)`, val: aW });
+                    totalAjuste += aW;
+                    efecEquipo = avgWin.toFixed(1) + 'W';
+                    if (avgWin >= 20) alerta = 'EQUIPO ELITE';
+                    else if (avgWin < 10) alerta = 'EQUIPO FRIO';
+                } else if (hasPlace) {
+                    const aP = (40 - avgPlace) * 0.01;
+                    ajustes.push({ label: `Jinete/Entrenador Place% (avg ${avgPlace.toFixed(1)}%)`, val: aP });
+                    totalAjuste += aP;
+                    efecEquipo = avgPlace.toFixed(1) + 'P';
+                    if (avgPlace >= 45) alerta = 'EQUIPO ELITE';
+                    else if (avgPlace < 30) alerta = 'EQUIPO FRIO';
                 }
             }
 
-            renderTablaVisual(hipoActual, carActual);
-        }
+            // Alerta de VALOR / TRAMPA (basado en ML, aunque aquí no hay ranking relativo)
+            const mlDec = parseOdds(document.getElementById('ml').value);
+            if (!alerta && !isNaN(mlDec)) {
+                if (mlDec >= 4.0) alerta = 'VALOR';
+                else if (mlDec <= 2.5) alerta = 'TRAMPA';
+            }
 
-        function renderTablaVisual(hipo, carrera) {
-            const tbody = document.getElementById('cuerpoTabla');
-            const emptyState = document.getElementById('emptyState');
-            const podioPanel = document.getElementById('podioPanel');
-            tbody.innerHTML = '';
+            const tpAjustado = tpReal + totalAjuste;
 
-            if (!carrera) { emptyState.style.display = 'block'; podioPanel.style.display = 'none'; return; }
+            // --- 3) Render ---
+            document.getElementById('tpFinal').innerText = tpAjustado.toFixed(2);
+            document.getElementById('tpReal').innerText = tpReal.toFixed(2) + 's';
 
-            let caballosFiltrados = filasCaballos.filter(c => c.hipodromo === hipo && c.carrera === parseInt(carrera));
+            // Alerta badge
+            const ab = document.getElementById('alertaBox');
+            ab.className = 'alerta-badge';
+            ab.innerText = '';
+            if (alerta === 'EQUIPO ELITE') { ab.classList.add('alerta-elite'); ab.innerText = '⭐ EQUIPO ELITE'; }
+            else if (alerta === 'EQUIPO FRIO') { ab.classList.add('alerta-frio'); ab.innerText = '❄️ EQUIPO FRÍO'; }
+            else if (alerta === 'VALOR') { ab.classList.add('alerta-valor'); ab.innerText = '💎 VALOR'; }
+            else if (alerta === 'TRAMPA') { ab.classList.add('alerta-trampa'); ab.innerText = '⚠️ TRAMPA'; }
+            else { ab.className = 'alerta-none'; }
 
-            if (caballosFiltrados.length === 0) { emptyState.style.display = 'block'; podioPanel.style.display = 'none'; return; } 
-            else { emptyState.style.display = 'none'; }
-
-            let validos = caballosFiltrados.filter(c => c.proyeccion !== null).sort((a,b) => a.ranking - b.ranking);
-            let invalidos = caballosFiltrados.filter(c => c.proyeccion === null);
-            let todos = [...validos, ...invalidos];
-
-            todos.forEach(c => {
-                const tr = document.createElement('tr');
-                if (c.ranking === 1) tr.classList.add('rank-1');
-                if (c.ranking === 2) tr.classList.add('rank-2');
-                if (c.ranking === 3) tr.classList.add('rank-3');
-
-                let posMostrar = c.ranking ? c.ranking : '-';
-                let proyMostrar = c.proyeccion ? c.proyeccion.toFixed(2) + " seg" : "---";
-                
-                // Lógica de la barra visual (El líder es 100%, los demás se achican según la diferencia)
-                let barWidth = 0;
-                let barClass = 'other';
-                if (c.proyeccion !== null) {
-                    if (c.ranking === 1) { barWidth = 100; barClass = 'leader'; }
-                    else if (c.ranking === 2) { barWidth = Math.max(10, 100 - (c.dif * 20)); barClass = 'second'; }
-                    else if (c.ranking === 3) { barWidth = Math.max(5, 100 - (c.dif * 20)); barClass = 'third'; }
-                    else { barWidth = Math.max(5, 100 - (c.dif * 20)); barClass = 'other'; }
-                }
-
-                // Lógica de ALERTAS (VALOR y TRAMPA)
-                let alertaHTML = '';
-                const mlDecimal = parseOdds(c.ml);
-                if (!isNaN(mlDecimal) && c.ranking) {
-                    // Si es el más rápido pero paga 4/1 o más -> VALOR
-                    if (c.ranking === 1 && mlDecimal >= 4.0) {
-                        alertaHTML = '<span class="val-alerta alerta-valor">🔥 VALOR</span>';
-                    }
-                    // Si es lento (4to o peor) pero paga 2/1 o menos -> TRAMPA
-                    else if (c.ranking >= 4 && mlDecimal <= 2.5) {
-                        alertaHTML = '<span class="val-alerta alerta-trampa">❌ TRAMPA</span>';
-                    }
-                }
-
-                tr.innerHTML = `
-                    <td style="font-weight: bold; font-size: 18px;">${posMostrar}</td>
-                    <td><input type="number" value="${c.nro}" onchange="actualizarDato(${c.id}, 'nro', this.value)" placeholder="Ej: 1" style="text-align:center;"></td>
-                    <td><input type="text" value="${c.nombre}" onchange="actualizarDato(${c.id}, 'nombre', this.value)" placeholder="Nombre" style="text-align:left;"></td>
-                    <td><input type="number" step="0.01" value="${c.tiempo}" onchange="actualizarDato(${c.id}, 'tiempo', this.value)" placeholder="Ej: 72.5" style="text-align:center;"></td>
-                    <td><input type="number" value="${c.distancia_anterior}" onchange="actualizarDato(${c.id}, 'distancia_anterior', this.value)" placeholder="Ej: 1200" style="text-align:center;"></td>
-                    <td>
-                        <span class="resultado">${proyMostrar}</span>
-                        <span class="formula-text">${c.formula}</span>
-                        <div class="bar-container"><div class="bar-fill ${barClass}" style="width: ${barWidth}%;"></div></div>
-                    </td>
-                    <td><input type="text" value="${c.ml}" onchange="actualizarDato(${c.id}, 'ml', this.value)" placeholder="Ej: 5/2" style="text-align:center;"></td>
-                    <td>${alertaHTML}</td>
-                    <td><button class="btn-delete" onclick="eliminarFila(${c.id})" title="Eliminar fila">🗑️</button></td>
+            // Breakdown
+            const bd = document.getElementById('breakdown');
+            bd.innerHTML = `
+                <div class="item"><b>Tiempo Promedio (TP Real)</b> <span style="color:#94a3b8;">(${validos.length} registro${validos.length>1?'s':''} válido${validos.length>1?'s':''})</span></div>
+                <div class="valor" style="color:var(--gold);">${tpReal.toFixed(2)}</div>
+            `;
+            ajustes.forEach(a => {
+                const cls = a.val > 0.001 ? 'val-pos' : a.val < -0.001 ? 'val-neg' : 'val-neutro';
+                const signo = a.val > 0 ? '+' : '';
+                bd.innerHTML += `
+                    <div class="item">${a.label}${a.extra ? `<br><span style="font-size:11px;opacity:0.7;">${a.extra}</span>` : ''}</div>
+                    <div class="valor ${cls}">${signo}${a.val.toFixed(2)}</div>
                 `;
-                tbody.appendChild(tr);
             });
+            const clsTot = totalAjuste > 0.001 ? 'val-pos' : totalAjuste < -0.001 ? 'val-neg' : 'val-neutro';
+            bd.innerHTML += `
+                <div class="item" style="border-top:1px solid var(--border); padding-top:8px; color:white; font-weight:bold;">SUMA TOTAL DE AJUSTES</div>
+                <div class="valor ${clsTot}" style="border-top:1px solid var(--border); padding-top:8px;">${totalAjuste > 0 ? '+' : ''}${totalAjuste.toFixed(2)}</div>
+            `;
 
-            // Actualizar Podio
-            if (validos.length > 0) {
-                podioPanel.style.display = 'flex';
-                document.getElementById('podio1').innerText = validos[0] ? `#${validos[0].nro} ${validos[0].nombre}` : '-';
-                document.getElementById('podio1_time').innerText = validos[0] ? `${validos[0].proyeccion.toFixed(2)} seg` : '';
-                document.getElementById('podio2').innerText = validos[1] ? `#${validos[1].nro} ${validos[1].nombre}` : '-';
-                document.getElementById('podio2_time').innerText = validos[1] ? `${validos[1].proyeccion.toFixed(2)} seg` : '';
-                document.getElementById('podio3').innerText = validos[2] ? `#${validos[2].nro} ${validos[2].nombre}` : '-';
-                document.getElementById('podio3_time').innerText = validos[2] ? `${validos[2].proyeccion.toFixed(2)} seg` : '';
-            } else {
-                podioPanel.style.display = 'none';
-            }
+            panel.style.display = 'block';
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        window.onload = () => { recalcularTodo(); };
+        // Atajo: Enter para calcular
+        document.addEventListener('keydown', e => { if (e.key === 'Enter') calcular(); });
     </script>
 </body>
 </html>
