@@ -36,9 +36,15 @@ h1{font-size:22px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .form-group{display:flex;flex-direction:column;gap:4px}
 .form-group label{font-size:11px;color:var(--text-muted);font-weight:600;
   text-transform:uppercase;letter-spacing:.3px}
-.form-group input{background:#f8fafc;border:1px solid var(--border);color:var(--text);
-  padding:9px 11px;border-radius:6px;font-size:14px;outline:none;width:100%;transition:.15s}
-.form-group input:focus{border-color:var(--accent);background:#fff}
+
+/* Estilos compartidos para Inputs y Selects */
+.form-group input, .form-group select{
+  background:#f8fafc;border:1px solid var(--border);color:var(--text);
+  padding:9px 11px;border-radius:6px;font-size:14px;outline:none;width:100%;transition:.15s;
+  font-family:inherit;
+}
+.form-group input:focus, .form-group select:focus{border-color:var(--accent);background:#fff}
+
 .horses-list{display:flex;flex-direction:column;gap:10px}
 .horse-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:#f8fafc}
 .horse-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -112,7 +118,33 @@ h1{font-size:22px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 
 <div class="panel">
   <div class="race-tabs" id="raceTabs"></div>
+  
   <div class="form-grid">
+    <!-- NUEVO SELECT DE HIPÓDROMOS -->
+    <div class="form-group">
+      <label>Hipódromo</label>
+      <select id="hipodromo">
+        <optgroup label="🇺🇸 Estados Unidos">
+          <option value="santa-anita">Santa Anita</option>
+          <option value="del-mar">Del Mar</option>
+          <option value="churchill">Churchill Downs</option>
+          <option value="belmont">Belmont Park</option>
+          <option value="saratoga">Saratoga</option>
+          <option value="keeneland">Keeneland</option>
+          <option value="gulfstream">Gulfstream Park</option>
+          <option value="aqueduct">Aqueduct</option>
+          <option value="pimlico">Pimlico</option>
+          <option value="oaklawn">Oaklawn Park</option>
+          <option value="tampa">Tampa Bay Downs</option>
+          <option value="monmouth">Monmouth Park</option>
+          <option value="woodbine">Woodbine</option>
+        </optgroup>
+        <optgroup label="🇻🇪 Venezuela">
+          <option value="la-rinconada">La Rinconada</option>
+        </optgroup>
+      </select>
+    </div>
+
     <div class="form-group">
       <label>Distancia Hoy (mts)</label>
       <input type="number" id="distanciaHoy" value="1400">
@@ -145,15 +177,18 @@ h1{font-size:22px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 </div>
 
 <script>
-// ✅ CAMBIO AQUÍ: Ahora son 15 carreras
 const NUM_RACES = 15; 
 const state = { activeRace: 1, races: {} };
 
 for (let i = 1; i <= NUM_RACES; i++) {
-  state.races[i] = { distanciaHoy: 1400, loteHoy: 'clm 12500', caballos: [newHorse()] };
+  state.races[i] = { 
+    hipodromo: 'santa-anita', 
+    distanciaHoy: 1400, 
+    loteHoy: 'clm 12500', 
+    caballos: [newHorse()] 
+  };
 }
 
-// Objeto simplificado
 function newHorse(){ return {num:'',tiempo:'',dist:'',ml:''}; }
 
 function renderTabs(){
@@ -170,8 +205,10 @@ function switchRace(n){ saveCurrentRace(); state.activeRace=n; renderTabs(); ren
 
 function saveCurrentRace(){
   const r=state.races[state.activeRace];
+  r.hipodromo=document.getElementById('hipodromo').value;
   r.distanciaHoy=parseFloat(document.getElementById('distanciaHoy').value)||1400;
   r.loteHoy=document.getElementById('loteHoy').value||'';
+  
   const cards=document.querySelectorAll('.horse-card');
   r.caballos=[];
   cards.forEach(c=>{
@@ -183,16 +220,21 @@ function saveCurrentRace(){
     });
   });
 }
+
 function renderRace(){
   const r=state.races[state.activeRace];
+  document.getElementById('hipodromo').value=r.hipodromo;
   document.getElementById('distanciaHoy').value=r.distanciaHoy;
   document.getElementById('loteHoy').value=r.loteHoy;
+  
   const list=document.getElementById('horsesList'); list.innerHTML='';
   r.caballos.forEach(h=>addHorseCard(h));
+  
   document.getElementById('podiumPanel').style.display='none';
   document.getElementById('resultsPanel').style.display='none';
   document.getElementById('errorMsg').innerText='';
 }
+
 function addHorseCard(h){
   const list=document.getElementById('horsesList');
   const card=document.createElement('div');
