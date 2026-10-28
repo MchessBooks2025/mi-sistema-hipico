@@ -3,115 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Pro USA - Compacta</title>
+<title>Calculadora Pro USA - Ultra Compacta</title>
 <style>
 :root{
   --bg:#f1f5f9; --panel:#ffffff; --text:#0f172a; --text-muted:#64748b;
-  --border:#e2e8f0; --accent:#2563eb; --accent-hover:#1d4ed8;
-  --success:#10b981; --danger:#ef4444;
+  --border:#cbd5e1; --accent:#2563eb;
   --gold:#FFD700; --silver:#C0C0C0; --bronze:#CD7F32;
-  --shadow:0 1px 2px rgba(0,0,0,.05);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:var(--bg); color:var(--text); padding:8px; font-size:12px; min-height:100vh;
+  background:var(--bg); color:var(--text); padding:4px; font-size:11px; min-height:100vh;
 }
-header{margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--border); display:flex; align-items:baseline; gap:10px;}
-h1{font-size:18px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3aed);
+header{margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border); display:flex; align-items:baseline; justify-content:space-between;}
+h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3aed);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
-.subtitle{font-size:10px;color:var(--text-muted)}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;
-  padding:10px;margin-bottom:8px;box-shadow:var(--shadow)}
-.panel h2{font-size:12px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
-.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.panel-header h2{margin-bottom:0}
-.race-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
-.race-tab{padding:4px 8px;border:1px solid var(--border);background:var(--panel);
-  color:var(--text-muted);border-radius:4px;font-weight:700;cursor:pointer;font-size:11px;transition:.15s}
+.subtitle{font-size:9px;color:var(--text-muted)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:4px;
+  padding:6px;margin-bottom:4px;}
+.panel h2{font-size:10px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px; display:inline-block;}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.race-tabs{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:6px}
+.race-tab{padding:2px 5px;border:1px solid var(--border);background:var(--panel);
+  color:var(--text-muted);border-radius:3px;font-weight:700;cursor:pointer;font-size:9px;transition:.15s}
 .race-tab:hover{border-color:var(--accent);color:var(--accent)}
-.race-tab.active{background:linear-gradient(135deg,#2563eb,#7c3aed);border-color:transparent;
-  color:#fff;box-shadow:0 2px 5px rgba(37,99,235,.3)}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.form-group{display:flex;flex-direction:column;gap:2px}
-.form-group label{font-size:9px;color:var(--text-muted);font-weight:700;
-  text-transform:uppercase;letter-spacing:.3px}
+.race-tab.active{background:var(--accent);border-color:transparent; color:#fff;}
+
+/* 3 Columnas para Hipódromo/Distancia/Clase */
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.form-group{display:flex;flex-direction:column;}
 .form-group input, .form-group select{
   background:#f8fafc;border:1px solid var(--border);color:var(--text);
-  padding:6px 8px;border-radius:4px;font-size:12px;outline:none;width:100%;transition:.15s;
+  padding:3px 5px;border-radius:3px;font-size:11px;outline:none;width:100%;
   font-family:inherit;
 }
 .form-group input:focus, .form-group select:focus{border-color:var(--accent);background:#fff}
-.horses-list{display:flex;flex-direction:column;gap:6px}
-.horse-card{border:1px solid var(--border);border-radius:6px;padding:8px;background:#f8fafc}
-.horse-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.horse-badge{font-weight:800;font-size:11px;color:var(--accent)}
-.btn-remove{background:transparent;border:1px solid var(--border);color:var(--danger);
-  width:20px;height:20px;border-radius:4px;cursor:pointer;font-weight:700;font-size:10px;transition:.15s;
-  display:flex;align-items:center;justify-content:center;}
-.btn-remove:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
-.horse-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(65px,1fr));gap:6px}
-.horse-fields .form-group label{font-size:8px}
-.horse-fields .form-group input{padding:4px 6px;font-size:11px}
-.btn-add{padding:4px 8px;border:1px dashed var(--accent);background:transparent;
-  color:var(--accent);border-radius:4px;font-weight:700;cursor:pointer;font-size:11px;transition:.15s}
-.btn-add:hover{background:var(--accent);color:#fff;border-style:solid}
-.btn-calcular{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;
-  padding:10px;border-radius:6px;font-size:14px;font-weight:800;cursor:pointer;width:100%;
-  margin-top:10px;box-shadow:0 2px 8px rgba(37,99,235,.3);transition:.15s}
-.btn-calcular:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.4)}
 
-@keyframes pulse-gold{
-  0%,100%{box-shadow:0 0 8px rgba(255,215,0,.5)}
-  50%{box-shadow:0 0 15px rgba(255,215,0,.9)}
+/* Fila de Caballo Ultra Compacta (Horizontal) */
+.horses-list{display:flex;flex-direction:column;gap:4px; margin-bottom:6px;}
+.horse-card{
+  display:grid; 
+  grid-template-columns: 35px 1fr 60px 50px 24px; /* Nº, Tiempo, Dist, ML, Boton X */
+  gap: 4px; 
+  align-items: center;
+  background:#f8fafc;
+  padding:3px;
+  border:1px solid var(--border);
+  border-radius:4px;
 }
-@keyframes pulse-silver{
-  0%,100%{box-shadow:0 0 8px rgba(192,192,192,.5)}
-  50%{box-shadow:0 0 15px rgba(192,192,192,.9)}
+.horse-card input {
+  background:#fff;border:1px solid var(--border);color:var(--text);
+  padding:3px 4px;border-radius:3px;font-size:11px;outline:none;width:100%; text-align:center;
 }
-@keyframes pulse-bronze{
-  0%,100%{box-shadow:0 0 8px rgba(205,127,50,.5)}
-  50%{box-shadow:0 0 15px rgba(205,127,50,.9)}
+.horse-card input:focus { border-color:var(--accent); }
+
+.btn-remove{
+  background:transparent; border:none; color:#ef4444; cursor:pointer; font-weight:900; 
+  font-size:14px; display:flex; align-items:center; justify-content:center;
 }
-.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.podium-slot{border-radius:8px;padding:8px 6px;text-align:center;position:relative;
-  overflow:hidden;color:#1a1a1a;font-weight:800}
-.podium-slot.oro{background:linear-gradient(135deg,#FFD700,#FFA500,#FFD700);animation:pulse-gold 2s ease-in-out infinite}
-.podium-slot.plata{background:linear-gradient(135deg,#E8E8E8,#A8A8A8,#E8E8E8);animation:pulse-silver 2s ease-in-out infinite}
-.podium-slot.bronce{background:linear-gradient(135deg,#E09E5B,#A0522D,#E09E5B);animation:pulse-bronze 2s ease-in-out infinite}
-.podium-medal{font-size:20px;line-height:1;margin-bottom:2px}
-.podium-pos{font-size:8px;text-transform:uppercase;letter-spacing:1px;opacity:.75}
-.podium-num{font-size:18px;font-weight:900;line-height:1.1;margin:2px 0}
-.podium-tp{font-size:11px;font-weight:900;opacity:.9}
-.result-row{display:grid;grid-template-columns:24px 40px 1fr auto;gap:6px;align-items:center;
-  padding:6px;border-radius:6px;margin-bottom:4px;background:#f8fafc;border:1px solid var(--border)}
+.btn-remove:hover{color:#b91c1c}
+
+.btn-add{padding:2px 6px;border:1px dashed var(--accent);background:transparent;
+  color:var(--accent);border-radius:3px;font-weight:700;cursor:pointer;font-size:10px;}
+.btn-add:hover{background:var(--accent);color:#fff;}
+
+.btn-calcular{background:var(--accent);color:#fff;border:none;
+  padding:6px;border-radius:4px;font-size:12px;font-weight:800;cursor:pointer;width:100%;
+  margin-top:4px;}
+
+/* Top 3 Súper Compacto */
+.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.podium-slot{border-radius:4px;padding:4px;text-align:center;color:#1a1a1a;font-weight:800;}
+.podium-slot.oro{background:linear-gradient(135deg,#FFD700,#FFA500)}
+.podium-slot.plata{background:linear-gradient(135deg,#E8E8E8,#A8A8A8)}
+.podium-slot.bronce{background:linear-gradient(135deg,#E09E5B,#A0522D)}
+.podium-pos{font-size:8px;text-transform:uppercase;opacity:.7}
+.podium-num{font-size:14px;font-weight:900;line-height:1;margin:2px 0}
+.podium-tp{font-size:10px;font-weight:900}
+
+/* Lista de Resultados Súper Compacta */
+.result-row{display:grid;grid-template-columns:20px 35px 1fr auto;gap:4px;align-items:center;
+  padding:3px 4px;border-radius:3px;margin-bottom:2px;background:#f8fafc;border:1px solid var(--border); font-size:11px;}
 .result-row.pos-1{border-left:3px solid var(--gold);background:#fffbeb}
 .result-row.pos-2{border-left:3px solid var(--silver)}
 .result-row.pos-3{border-left:3px solid var(--bronze);background:#fdf6ec}
-.result-rank{font-weight:900;font-size:12px;color:var(--text-muted)}
-.result-num{font-weight:800;font-size:13px}
-.result-info{font-size:10px;color:var(--text-muted)}
-.result-tp{font-weight:900;font-size:14px;color:var(--accent)}
-.error-msg{color:var(--danger);font-size:11px;font-weight:700;text-align:center;margin-top:6px}
+.result-rank{font-weight:900;color:var(--text-muted);text-align:center;}
+.result-num{font-weight:800;}
+.result-tp{font-weight:900;color:var(--accent);}
 
-.badge-valor{display:inline-block;background:rgba(16,185,129,.15);color:var(--success);
-  border:1px solid var(--success);padding:1px 4px;border-radius:3px;font-size:8px;font-weight:800;margin-left:4px}
-.badge-trampa{display:inline-block;background:rgba(239,68,68,.15);color:var(--danger);
-  border:1px solid var(--danger);padding:1px 4px;border-radius:3px;font-size:8px;font-weight:800;margin-left:4px}
+.badge-valor{background:rgba(16,185,129,.15);color:#10b981; border:1px solid #10b981;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
+.badge-trampa{background:rgba(239,68,68,.15);color:#ef4444; border:1px solid #ef4444;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
+.error-msg{color:#ef4444;font-size:10px;font-weight:700;text-align:center;margin-top:2px}
 
-@media(max-width:640px){
-  .podium{grid-template-columns:1fr; gap:4px;}
-  .podium-slot{padding:6px; display:flex; align-items:center; justify-content:space-between;}
-  .podium-slot > div {margin:0;}
-  .podium-medal{font-size:16px;}
+/* Ajuste para celulares muy pequeños */
+@media(max-width:400px){
+  .form-grid{grid-template-columns:1fr 1fr} /* Pasa a 2 columnas */
+  .horse-card{grid-template-columns: 30px 1fr 50px 40px 20px;}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🏇 Calculadora Pro USA</h1>
-  <div class="subtitle">Ranking por tiempos · Top 3</div>
+  <h1>🏇 Calc Pro USA</h1>
+  <div class="subtitle">Top 3</div>
 </header>
 
 <div class="panel">
@@ -119,21 +114,20 @@ h1{font-size:18px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
   
   <div class="form-grid">
     <div class="form-group">
-      <label>Hipódromo</label>
-      <select id="hipodromo">
-        <optgroup label="🇺🇸 Estados Unidos">
+      <select id="hipodromo" title="Hipódromo">
+        <optgroup label="🇺🇸 USA">
           <option value="santa-anita">Santa Anita</option>
           <option value="del-mar">Del Mar</option>
-          <option value="churchill">Churchill Downs</option>
-          <option value="belmont">Belmont Park</option>
+          <option value="churchill">Churchill</option>
+          <option value="belmont">Belmont</option>
           <option value="saratoga">Saratoga</option>
           <option value="keeneland">Keeneland</option>
-          <option value="gulfstream">Gulfstream Park</option>
+          <option value="gulfstream">Gulfstream</option>
           <option value="aqueduct">Aqueduct</option>
           <option value="pimlico">Pimlico</option>
-          <option value="oaklawn">Oaklawn Park</option>
-          <option value="tampa">Tampa Bay Downs</option>
-          <option value="monmouth">Monmouth Park</option>
+          <option value="oaklawn">Oaklawn</option>
+          <option value="tampa">Tampa Bay</option>
+          <option value="monmouth">Monmouth</option>
           <option value="woodbine">Woodbine</option>
         </optgroup>
         <optgroup label="🇻🇪 Venezuela">
@@ -141,14 +135,11 @@ h1{font-size:18px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
         </optgroup>
       </select>
     </div>
-
     <div class="form-group">
-      <label>Distancia Hoy (mts)</label>
-      <input type="number" id="distanciaHoy" value="1400">
+      <input type="number" id="distanciaHoy" value="1400" title="Distancia Hoy">
     </div>
     <div class="form-group">
-      <label>Clase Hoy (Lote)</label>
-      <input type="text" id="loteHoy" placeholder="Ej: clm 12500" value="clm 12500">
+      <input type="text" id="loteHoy" value="clm 12500" title="Clase Hoy">
     </div>
   </div>
 </div>
@@ -156,20 +147,21 @@ h1{font-size:18px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 <div class="panel">
   <div class="panel-header">
     <h2>🐎 Caballos</h2>
-    <button class="btn-add" onclick="addHorse()">+ Caballo</button>
+    <button class="btn-add" onclick="addHorse()">+ Añadir</button>
   </div>
+  
   <div class="horses-list" id="horsesList"></div>
-  <button class="btn-calcular" onclick="calcular()">🏆 Calcular Top 3</button>
+  <button class="btn-calcular" onclick="calcular()">Calcular Top 3</button>
   <div id="errorMsg" class="error-msg"></div>
 </div>
 
 <div class="panel" id="podiumPanel" style="display:none;">
-  <h2>🏆 Top 3 Proyectado</h2>
+  <h2>🏆 Podio</h2>
   <div class="podium" id="podium"></div>
 </div>
 
 <div class="panel" id="resultsPanel" style="display:none;">
-  <h2>📊 Ranking Completo</h2>
+  <h2>📊 Ranking</h2>
   <div id="resultsList"></div>
 </div>
 
@@ -193,7 +185,8 @@ function renderTabs(){
   for(let i=1;i<=NUM_RACES;i++){
     const b=document.createElement('button');
     b.className='race-tab'+(i===state.activeRace?' active':'');
-    b.textContent='Carrera '+i;
+    b.textContent=i; // Solo el número para que sea más compacto
+    b.title='Carrera '+i;
     b.onclick=()=>switchRace(i);
     tabs.appendChild(b);
   }
@@ -236,23 +229,15 @@ function addHorseCard(h){
   const list=document.getElementById('horsesList');
   const card=document.createElement('div');
   card.className='horse-card';
+  // Interfaz en línea horizontal
   card.innerHTML=`
-    <div class="horse-card-header">
-      <span class="horse-badge">CABALLO ${h.num?'#'+h.num:''}</span>
-      <button class="btn-remove" onclick="removeHorse(this)">✕</button>
-    </div>
-    <div class="horse-fields">
-      <div class="form-group"><label>Nº</label><input class="h-num" type="number" placeholder="5" value="${h.num||''}"></div>
-      <div class="form-group"><label>Tiempo Últ.</label><input class="h-tiempo" placeholder="70.4" value="${h.tiempo||''}"></div>
-      <div class="form-group"><label>Dist. Últ.</label><input class="h-dist" type="number" placeholder="1400" value="${h.dist||''}"></div>
-      <div class="form-group"><label>ML</label><input class="h-ml" placeholder="5/2" value="${h.ml||''}"></div>
-    </div>`;
+    <input class="h-num" type="number" placeholder="Nº" value="${h.num||''}" title="Número">
+    <input class="h-tiempo" placeholder="Tiempo (70.4)" value="${h.tiempo||''}" title="Tiempo Última">
+    <input class="h-dist" type="number" placeholder="Dist" value="${h.dist||''}" title="Distancia Última">
+    <input class="h-ml" placeholder="ML" value="${h.ml||''}" title="Morning Line">
+    <button class="btn-remove" onclick="removeHorse(this)" title="Eliminar">✕</button>
+  `;
   list.appendChild(card);
-  const numInput=card.querySelector('.h-num');
-  const badge=card.querySelector('.horse-badge');
-  numInput.addEventListener('input',()=>{
-    badge.textContent='CABALLO '+(numInput.value?'#'+numInput.value:'');
-  });
 }
 function addHorse(){ addHorseCard(newHorse()); }
 function removeHorse(b){ b.closest('.horse-card').remove(); }
@@ -299,7 +284,7 @@ function calcular(){
   });
 
   if(resultados.length===0){
-    err.innerText='⚠️ Agrega al menos un caballo con Nº, Tiempo y Distancia válidos.';
+    err.innerText='⚠️ Faltan datos válidos.';
     document.getElementById('podiumPanel').style.display='none';
     document.getElementById('resultsPanel').style.display='none';
     return;
@@ -317,20 +302,18 @@ function calcular(){
 
 function renderPodium(top){
   const pod=document.getElementById('podium'); pod.innerHTML='';
-  const medals=['🥇','🥈','🥉'];
   const classes=['oro','plata','bronce'];
-  const labels=['1º LUGAR','2º LUGAR','3º LUGAR'];
+  const labels=['1º','2º','3º'];
   for(let i=0;i<3;i++){
     const s=document.createElement('div');
     s.className='podium-slot '+classes[i];
     if(top[i]){
       s.innerHTML=`
-        <div class="podium-medal">${medals[i]}</div>
         <div class="podium-pos">${labels[i]}</div>
         <div class="podium-num">#${top[i].num}</div>
         <div class="podium-tp">${top[i].tpProyectado.toFixed(2)}s</div>`;
     } else {
-      s.innerHTML=`<div class="podium-medal">${medals[i]}</div><div class="podium-pos">${labels[i]}</div><div class="podium-num">—</div>`;
+      s.innerHTML=`<div class="podium-pos">${labels[i]}</div><div class="podium-num">—</div>`;
     }
     pod.appendChild(s);
   }
@@ -344,16 +327,14 @@ function renderResults(resultados){
     
     let mlTag = '';
     if(!isNaN(r.ml)){
-      if(r.ml >= 4.0) mlTag = '<span class="badge-valor">VALOR</span>';
-      else if(r.ml <= 2.5) mlTag = '<span class="badge-trampa">TRAMPA</span>';
+      if(r.ml >= 4.0) mlTag = '<span class="badge-valor">VAL</span>';
+      else if(r.ml <= 2.5) mlTag = '<span class="badge-trampa">TRAMP</span>';
     }
 
     row.innerHTML=`
       <div class="result-rank">${i+1}</div>
       <div class="result-num">#${r.num}</div>
-      <div>
-        <div><b>Proyectado:</b> ${r.tpProyectado.toFixed(2)}s ${mlTag}</div>
-      </div>
+      <div><b>${r.tpProyectado.toFixed(2)}s</b> ${mlTag}</div>
       <div class="result-tp">${r.tpProyectado.toFixed(2)}</div>`;
     list.appendChild(row);
   });
