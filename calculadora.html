@@ -38,19 +38,22 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 }
 .form-group input:focus, .form-group select:focus{border-color:var(--accent);background:#fff}
 
-/* --- TABLA DE CABALLOS --- */
+/* --- TABLA DE CABALLOS CORREGIDA --- */
+/* Anchos fijos: Nº(35) | Tiempo(75) | Dist(65) | ML(55) | X(20) + gaps */
 .table-header {
   display: grid; 
-  grid-template-columns: 30px 1fr 60px 50px 22px; 
-  gap: 2px; 
-  padding: 0 3px 2px 3px;
+  grid-template-columns: 35px 75px 65px 55px 20px; 
+  justify-content: center; /* Centra la tabla horizontalmente */
+  gap: 4px; 
+  padding: 0 2px 2px 2px;
   font-size: 8px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center;
 }
 .horses-list{display:flex;flex-direction:column;gap:2px; margin-bottom:6px;}
 .horse-card{
   display:grid; 
-  grid-template-columns: 30px 1fr 60px 50px 22px;
-  gap: 2px; 
+  grid-template-columns: 35px 75px 65px 55px 20px;
+  justify-content: center; /* Centra las filas para que no queden pegadas a la izquierda */
+  gap: 4px; 
   align-items: center;
   background:#f8fafc;
   padding:2px;
@@ -104,6 +107,11 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .badge-valor{background:rgba(16,185,129,.15);color:#10b981; border:1px solid #10b981;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
 .badge-trampa{background:rgba(239,68,68,.15);color:#ef4444; border:1px solid #ef4444;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
 .error-msg{color:#ef4444;font-size:10px;font-weight:700;text-align:center;margin-top:2px}
+
+/* Ajuste para celulares muy pequeños (achica un poco las cajas) */
+@media(max-width:400px){
+  .table-header, .horse-card { grid-template-columns: 30px 60px 55px 45px 18px; gap: 2px; }
+}
 </style>
 </head>
 <body>
@@ -157,11 +165,11 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
     <button class="btn-add" onclick="addHorse()">+ Añadir</button>
   </div>
   
-  <!-- ENCABEZADOS DE LA TABLA -->
+  <!-- ENCABEZADOS -->
   <div class="table-header">
     <div>Nº</div>
     <div>Tiempo</div>
-    <div>Distancia</div>
+    <div>Dist.</div>
     <div>ML</div>
     <div></div>
   </div>
@@ -245,25 +253,25 @@ function addHorseCard(h){
   const list=document.getElementById('horsesList');
   const card=document.createElement('div');
   card.className='horse-card';
+  // Los inputs ya no dicen "Ej:", para ahorrar espacio en las cajas pequeñas
   card.innerHTML=`
-    <input class="h-num" type="number" placeholder="Ej: 5" value="${h.num||''}" tabindex="0">
-    <input class="h-tiempo" placeholder="Ej: 70.4" value="${h.tiempo||''}" tabindex="0">
-    <input class="h-dist" type="number" placeholder="1400" value="${h.dist||''}" tabindex="0">
-    <input class="h-ml" placeholder="5/2" value="${h.ml||''}" tabindex="0">
+    <input class="h-num" type="number" placeholder="5" value="${h.num||''}" title="Número">
+    <input class="h-tiempo" placeholder="70.4" value="${h.tiempo||''}" title="Tiempo Última">
+    <input class="h-dist" type="number" placeholder="1400" value="${h.dist||''}" title="Distancia Última">
+    <input class="h-ml" placeholder="5/2" value="${h.ml||''}" title="Morning Line">
     <button class="btn-remove" onclick="removeHorse(this)" title="Eliminar">✕</button>
   `;
   list.appendChild(card);
 
-  // Lógica para que al presionar Enter salte al siguiente input
+  // Salto automático con "Enter"
   const inputs = card.querySelectorAll('input');
   inputs.forEach((input, index) => {
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         if (index < inputs.length - 1) {
-          inputs[index + 1].focus(); // Salta al siguiente input
+          inputs[index + 1].focus();
         } else {
-          // Si es el último input de la fila, añade una nueva fila y enfoca el Nº
           addHorse();
           const allCards = document.querySelectorAll('.horse-card');
           const lastCard = allCards[allCards.length - 1];
@@ -280,7 +288,7 @@ function removeHorse(b){ b.closest('.horse-card').remove(); }
 function clearHorses(){
   if(confirm('¿Borrar todos los caballos de esta carrera?')) {
     document.getElementById('horsesList').innerHTML = '';
-    addHorse(); // Deja una fila vacía
+    addHorse();
   }
 }
 
