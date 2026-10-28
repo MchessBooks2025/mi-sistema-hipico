@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Pro USA - Ultra Compacta</title>
+<title>Calculadora Pro USA - Tabla Rápida</title>
 <style>
 :root{
   --bg:#f1f5f9; --panel:#ffffff; --text:#0f172a; --text-muted:#64748b;
@@ -29,8 +29,7 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .race-tab:hover{border-color:var(--accent);color:var(--accent)}
 .race-tab.active{background:var(--accent);border-color:transparent; color:#fff;}
 
-/* 3 Columnas para Hipódromo/Distancia/Clase */
-.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.form-grid{display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:4px}
 .form-group{display:flex;flex-direction:column;}
 .form-group input, .form-group select{
   background:#f8fafc;border:1px solid var(--border);color:var(--text);
@@ -39,27 +38,35 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 }
 .form-group input:focus, .form-group select:focus{border-color:var(--accent);background:#fff}
 
-/* Fila de Caballo Ultra Compacta (Horizontal) */
-.horses-list{display:flex;flex-direction:column;gap:4px; margin-bottom:6px;}
+/* --- TABLA DE CABALLOS --- */
+.table-header {
+  display: grid; 
+  grid-template-columns: 30px 1fr 60px 50px 22px; 
+  gap: 2px; 
+  padding: 0 3px 2px 3px;
+  font-size: 8px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center;
+}
+.horses-list{display:flex;flex-direction:column;gap:2px; margin-bottom:6px;}
 .horse-card{
   display:grid; 
-  grid-template-columns: 35px 1fr 60px 50px 24px; /* Nº, Tiempo, Dist, ML, Boton X */
-  gap: 4px; 
+  grid-template-columns: 30px 1fr 60px 50px 22px;
+  gap: 2px; 
   align-items: center;
   background:#f8fafc;
-  padding:3px;
+  padding:2px;
   border:1px solid var(--border);
-  border-radius:4px;
+  border-radius:3px;
 }
+.horse-card:hover { background: #f1f5f9; }
 .horse-card input {
   background:#fff;border:1px solid var(--border);color:var(--text);
-  padding:3px 4px;border-radius:3px;font-size:11px;outline:none;width:100%; text-align:center;
+  padding:3px 2px;border-radius:2px;font-size:11px;outline:none;width:100%; text-align:center;
 }
-.horse-card input:focus { border-color:var(--accent); }
+.horse-card input:focus { border-color:var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 
 .btn-remove{
   background:transparent; border:none; color:#ef4444; cursor:pointer; font-weight:900; 
-  font-size:14px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; display:flex; align-items:center; justify-content:center;
 }
 .btn-remove:hover{color:#b91c1c}
 
@@ -67,11 +74,15 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
   color:var(--accent);border-radius:3px;font-weight:700;cursor:pointer;font-size:10px;}
 .btn-add:hover{background:var(--accent);color:#fff;}
 
+.btn-clear{padding:2px 6px;border:1px solid #ef4444;background:transparent;
+  color:#ef4444;border-radius:3px;font-weight:700;cursor:pointer;font-size:9px; margin-left:4px;}
+.btn-clear:hover{background:#ef4444;color:#fff;}
+
 .btn-calcular{background:var(--accent);color:#fff;border:none;
   padding:6px;border-radius:4px;font-size:12px;font-weight:800;cursor:pointer;width:100%;
   margin-top:4px;}
 
-/* Top 3 Súper Compacto */
+/* --- RESULTADOS --- */
 .podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
 .podium-slot{border-radius:4px;padding:4px;text-align:center;color:#1a1a1a;font-weight:800;}
 .podium-slot.oro{background:linear-gradient(135deg,#FFD700,#FFA500)}
@@ -81,7 +92,6 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .podium-num{font-size:14px;font-weight:900;line-height:1;margin:2px 0}
 .podium-tp{font-size:10px;font-weight:900}
 
-/* Lista de Resultados Súper Compacta */
 .result-row{display:grid;grid-template-columns:20px 35px 1fr auto;gap:4px;align-items:center;
   padding:3px 4px;border-radius:3px;margin-bottom:2px;background:#f8fafc;border:1px solid var(--border); font-size:11px;}
 .result-row.pos-1{border-left:3px solid var(--gold);background:#fffbeb}
@@ -94,12 +104,6 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .badge-valor{background:rgba(16,185,129,.15);color:#10b981; border:1px solid #10b981;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
 .badge-trampa{background:rgba(239,68,68,.15);color:#ef4444; border:1px solid #ef4444;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
 .error-msg{color:#ef4444;font-size:10px;font-weight:700;text-align:center;margin-top:2px}
-
-/* Ajuste para celulares muy pequeños */
-@media(max-width:400px){
-  .form-grid{grid-template-columns:1fr 1fr} /* Pasa a 2 columnas */
-  .horse-card{grid-template-columns: 30px 1fr 50px 40px 20px;}
-}
 </style>
 </head>
 <body>
@@ -146,10 +150,22 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 
 <div class="panel">
   <div class="panel-header">
-    <h2>🐎 Caballos</h2>
+    <div>
+      <h2>🐎 Caballos</h2>
+      <button class="btn-clear" onclick="clearHorses()">Limpiar</button>
+    </div>
     <button class="btn-add" onclick="addHorse()">+ Añadir</button>
   </div>
   
+  <!-- ENCABEZADOS DE LA TABLA -->
+  <div class="table-header">
+    <div>Nº</div>
+    <div>Tiempo</div>
+    <div>Distancia</div>
+    <div>ML</div>
+    <div></div>
+  </div>
+
   <div class="horses-list" id="horsesList"></div>
   <button class="btn-calcular" onclick="calcular()">Calcular Top 3</button>
   <div id="errorMsg" class="error-msg"></div>
@@ -185,7 +201,7 @@ function renderTabs(){
   for(let i=1;i<=NUM_RACES;i++){
     const b=document.createElement('button');
     b.className='race-tab'+(i===state.activeRace?' active':'');
-    b.textContent=i; // Solo el número para que sea más compacto
+    b.textContent=i;
     b.title='Carrera '+i;
     b.onclick=()=>switchRace(i);
     tabs.appendChild(b);
@@ -229,18 +245,44 @@ function addHorseCard(h){
   const list=document.getElementById('horsesList');
   const card=document.createElement('div');
   card.className='horse-card';
-  // Interfaz en línea horizontal
   card.innerHTML=`
-    <input class="h-num" type="number" placeholder="Nº" value="${h.num||''}" title="Número">
-    <input class="h-tiempo" placeholder="Tiempo (70.4)" value="${h.tiempo||''}" title="Tiempo Última">
-    <input class="h-dist" type="number" placeholder="Dist" value="${h.dist||''}" title="Distancia Última">
-    <input class="h-ml" placeholder="ML" value="${h.ml||''}" title="Morning Line">
+    <input class="h-num" type="number" placeholder="Ej: 5" value="${h.num||''}" tabindex="0">
+    <input class="h-tiempo" placeholder="Ej: 70.4" value="${h.tiempo||''}" tabindex="0">
+    <input class="h-dist" type="number" placeholder="1400" value="${h.dist||''}" tabindex="0">
+    <input class="h-ml" placeholder="5/2" value="${h.ml||''}" tabindex="0">
     <button class="btn-remove" onclick="removeHorse(this)" title="Eliminar">✕</button>
   `;
   list.appendChild(card);
+
+  // Lógica para que al presionar Enter salte al siguiente input
+  const inputs = card.querySelectorAll('input');
+  inputs.forEach((input, index) => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (index < inputs.length - 1) {
+          inputs[index + 1].focus(); // Salta al siguiente input
+        } else {
+          // Si es el último input de la fila, añade una nueva fila y enfoca el Nº
+          addHorse();
+          const allCards = document.querySelectorAll('.horse-card');
+          const lastCard = allCards[allCards.length - 1];
+          lastCard.querySelector('.h-num').focus();
+        }
+      }
+    });
+  });
 }
+
 function addHorse(){ addHorseCard(newHorse()); }
 function removeHorse(b){ b.closest('.horse-card').remove(); }
+
+function clearHorses(){
+  if(confirm('¿Borrar todos los caballos de esta carrera?')) {
+    document.getElementById('horsesList').innerHTML = '';
+    addHorse(); // Deja una fila vacía
+  }
+}
 
 function parseTiempo(v){
   if(!v) return NaN;
