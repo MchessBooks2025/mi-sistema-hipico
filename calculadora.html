@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Pro USA - Ultra Compacta</title>
+<title>Calculadora Pro USA - Compacta</title>
 <style>
 :root{
   --bg:#f1f5f9; --panel:#ffffff; --text:#0f172a; --text-muted:#64748b;
@@ -84,7 +84,7 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
   padding:6px;border-radius:4px;font-size:12px;font-weight:800;cursor:pointer;width:100%;
   margin-top:4px;}
 
-/* --- RESULTADOS ULTRA COMPACTOS --- */
+/* --- RESULTADOS --- */
 .podium{display:grid; grid-template-columns: repeat(3, 1fr); gap:4px; max-width: 320px; margin: 0 auto;}
 .podium-slot{border-radius:4px;padding:4px 2px;text-align:center;color:#1a1a1a;font-weight:800;}
 .podium-slot.oro{background:linear-gradient(135deg,#FFD700,#FFA500)}
@@ -94,23 +94,32 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .podium-num{font-size:14px;font-weight:900;line-height:1;margin:1px 0}
 .podium-tp{font-size:10px;font-weight:900}
 
-/* Aquí estaba el problema: mucho espacio y textos duplicados */
+/* CORRECCIÓN DEL ESPACIO VACÍO: Ahora usamos Flexbox */
 .result-row{
-  display:grid; 
-  grid-template-columns: 20px 35px 1fr 45px; 
-  gap:4px; align-items:center;
-  padding:2px 6px; border-radius:3px; margin-bottom:2px; 
-  background:#f8fafc; border:1px solid var(--border); 
-  font-size:10px;
+  display: flex; 
+  justify-content: space-between; /* Separa la izquierda y la derecha */
+  align-items: center;
+  padding: 3px 6px; 
+  border-radius: 3px; 
+  margin-bottom: 2px; 
+  background: #f8fafc; 
+  border: 1px solid var(--border); 
+  font-size: 11px;
 }
 .result-row.pos-1{border-left:3px solid var(--gold);background:#fffbeb}
 .result-row.pos-2{border-left:3px solid var(--silver)}
 .result-row.pos-3{border-left:3px solid var(--bronze);background:#fdf6ec}
 
-.result-rank{font-weight:900;color:var(--text-muted);text-align:center;}
-.result-num{font-weight:800;}
-.result-info{display:flex; justify-content:flex-start;} /* Aquí va la etiqueta de VAL/TRAMP */
-.result-tp{font-weight:900;color:var(--accent);text-align:right; font-size:11px;}
+/* Contenedor de la izquierda (Rank + Nº + Etiqueta) */
+.result-left {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Separación entre el puesto, el número y la etiqueta */
+}
+
+.result-rank{font-weight:900;color:var(--text-muted); width:15px; text-align:center;}
+.result-num{font-weight:800; min-width: 25px;}
+.result-tp{font-weight:900;color:var(--accent); font-size:12px;}
 
 .badge-valor{background:rgba(16,185,129,.15);color:#10b981; border:1px solid #10b981;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;}
 .badge-trampa{background:rgba(239,68,68,.15);color:#ef4444; border:1px solid #ef4444;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;}
@@ -381,11 +390,13 @@ function renderResults(resultados){
       else if(r.ml <= 2.5) mlTag = '<span class="badge-trampa">TRAMP</span>';
     }
 
-    // SE ELIMINÓ EL TIEMPO DUPLICADO. Ahora la estructura es: Rank | Nº | Etiqueta | Tiempo
+    // Nuevo HTML usando Flexbox para que no haya huecos
     row.innerHTML=`
-      <div class="result-rank">${i+1}</div>
-      <div class="result-num">#${r.num}</div>
-      <div class="result-info">${mlTag}</div>
+      <div class="result-left">
+        <div class="result-rank">${i+1}</div>
+        <div class="result-num">#${r.num}</div>
+        ${mlTag}
+      </div>
       <div class="result-tp">${r.tpProyectado.toFixed(2)}s</div>`;
     list.appendChild(row);
   });
