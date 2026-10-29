@@ -172,7 +172,8 @@
         </div>
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
             <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px; font-size: 14px;">
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px; font-size: 14px;">
+            <!-- AGREGO ONINPUT PARA ACTUALIZAR EL MODAL AUTOMÁTICAMENTE -->
+            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px; font-size: 14px;" oninput="actualizarDistanciasModal(this.value)">
             <input type="text" id="lote_hoy" placeholder="Clase Hoy (ej: clm 12500b)" style="width: 160px; font-size: 14px; color: var(--gold); font-weight: bold;" onchange="calcularTodo()">
             <button onclick="abrirFormularioCaballo()" class="btn-primary" style="width: auto; padding: 10px 20px;">➕ Añadir Caballo</button>
         </div>
@@ -293,6 +294,18 @@
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
 
+        // --- NUEVA FUNCIÓN: AUTOCOMPLETAR DISTANCIAS EN EL MODAL ---
+        function actualizarDistanciasModal(nuevaDist) {
+            if (!nuevaDist) return;
+            // Si el formulario de añadir caballo está abierto, actualizamos sus 5 casillas
+            if (document.getElementById('modalFormulario').style.display === 'flex') {
+                for (let i = 1; i <= 5; i++) {
+                    const input = document.getElementById('f_d' + i);
+                    if (input) input.value = nuevaDist;
+                }
+            }
+        }
+
         // --- EL MOTOR DE CLASES ---
         function getClassScore(loteStr) {
             if (!loteStr) return NaN;
@@ -333,6 +346,11 @@
             if (!car || !dist) { alert("⚠️ Primero escribe la Carrera N° y la Distancia en la barra superior."); return; }
             document.getElementById('modalFormulario').style.display = 'flex';
             ['nro','name','kilos','puesto','ml','lote','t1','d1','t2','d2','t3','d3','t4','d4','t5','d5'].forEach(id => document.getElementById('f_'+id).value = '');
+            
+            // MEJORA: Pre-llenar las 5 distancias con la distancia de arriba
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('f_d' + i).value = dist;
+            }
         }
 
         function cerrarFormularioCaballo() { document.getElementById('modalFormulario').style.display = 'none'; }
@@ -385,7 +403,8 @@
                             scratched: false, nro: item.nro || '', name: item.nombre || '', notes: '', tip: '', jockey_name: item.jockey || '', trainer_name: item.entrenador || '',
                             j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
                             t1: item.t1 || '', t2: item.t2 || '', t3: item.t3 || '', t4: item.t4 || '', t5: item.t5 || '', 
-                            d1: item.d1 || distancia, d2: item.d2 || '', d3: item.d3 || '', d4: item.d4 || '', d5: item.d5 || '',
+                            // MEJORA: Si el JSON no trae distancia, usa la de la carrera para todas
+                            d1: item.d1 || distancia, d2: item.d2 || distancia, d3: item.d3 || distancia, d4: item.d4 || distancia, d5: item.d5 || distancia,
                             puesto: item.puesto || '', kilos: item.kilos || '', style: '', quirin: '', ml: item.ml || '',
                             lote: item.lote || '',
                             tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
@@ -547,11 +566,14 @@
                     <td><input type="text" value="${c.t3 || ''}" onchange="actualizarDato(${c.id}, 't3', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.t4 || ''}" onchange="actualizarDato(${c.id}, 't4', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.t5 || ''}" onchange="actualizarDato(${c.id}, 't5', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" value="${c.d1 || ''}" onchange="actualizarDato(${c.id}, 'd1', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" value="${c.d2 || ''}" onchange="actualizarDato(${c.id}, 'd2', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" value="${c.d3 || ''}" onchange="actualizarDato(${c.id}, 'd3', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" value="${c.d4 || ''}" onchange="actualizarDato(${c.id}, 'd4', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="number" value="${c.d5 || ''}" onchange="actualizarDato(${c.id}, 'd5', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    
+                    <!-- MEJORA: placeholder con la distancia de hoy -->
+                    <td><input type="number" value="${c.d1 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd1', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" value="${c.d2 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd2', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" value="${c.d3 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd3', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" value="${c.d4 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd4', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><input type="number" value="${c.d5 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd5', this.value)" ${c.scratched ? 'disabled' : ''}></td>
+                    
                     <td><input type="number" value="${c.puesto || ''}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" value="${c.kilos || ''}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><select onchange="actualizarDato(${c.id}, 'style', this.value)" ${c.scratched ? 'disabled' : ''}><option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option><option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option><option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option></select></td>
@@ -627,7 +649,16 @@
             caballos.forEach(c => {
                 if (c.scratched) { c.tpReal = "Ret."; c.ajuste = "-"; c.tpAjustado = "Ret."; c.ranking = "-"; c.dif = "-"; c.est = "-"; c.alerta = ""; c.efec_equipo = "-"; c.ajusteLote = 0; return; }
                 const tiempos = [parseTiempo(c.t1), parseTiempo(c.t2), parseTiempo(c.t3), parseTiempo(c.t4), parseTiempo(c.t5)];
-                const distancias = [parseFloat(c.d1), parseFloat(c.d2), parseFloat(c.d3), parseFloat(c.d4), parseFloat(c.d5)];
+                
+                // MEJORA: Si la distancia está vacía, usa la distancia de la carrera por defecto
+                const distancias = [
+                    c.d1 ? parseFloat(c.d1) : c.distanciaHoy,
+                    c.d2 ? parseFloat(c.d2) : c.distanciaHoy,
+                    c.d3 ? parseFloat(c.d3) : c.distanciaHoy,
+                    c.d4 ? parseFloat(c.d4) : c.distanciaHoy,
+                    c.d5 ? parseFloat(c.d5) : c.distanciaHoy
+                ];
+
                 let tiemposValidos = [];
                 for(let i=0; i<5; i++) { if(distancias[i] === c.distanciaHoy && !isNaN(tiempos[i])) tiemposValidos.push(tiempos[i]); }
                 c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "S/D";
