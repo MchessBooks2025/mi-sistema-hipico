@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Pro USA - Tabla Rápida</title>
+<title>Calculadora Pro USA - Ultra Compacta</title>
 <style>
 :root{
   --bg:#f1f5f9; --panel:#ffffff; --text:#0f172a; --text-muted:#64748b;
@@ -38,12 +38,11 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 }
 .form-group input:focus, .form-group select:focus{border-color:var(--accent);background:#fff}
 
-/* --- TABLA DE CABALLOS CORREGIDA --- */
-/* Anchos fijos: Nº(35) | Tiempo(75) | Dist(65) | ML(55) | X(20) + gaps */
+/* --- TABLA DE CABALLOS --- */
 .table-header {
   display: grid; 
   grid-template-columns: 35px 75px 65px 55px 20px; 
-  justify-content: center; /* Centra la tabla horizontalmente */
+  justify-content: center;
   gap: 4px; 
   padding: 0 2px 2px 2px;
   font-size: 8px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center;
@@ -52,7 +51,7 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .horse-card{
   display:grid; 
   grid-template-columns: 35px 75px 65px 55px 20px;
-  justify-content: center; /* Centra las filas para que no queden pegadas a la izquierda */
+  justify-content: center;
   gap: 4px; 
   align-items: center;
   background:#f8fafc;
@@ -85,33 +84,37 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
   padding:6px;border-radius:4px;font-size:12px;font-weight:800;cursor:pointer;width:100%;
   margin-top:4px;}
 
-/* --- RESULTADOS --- */
-.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
-.podium-slot{border-radius:4px;padding:4px;text-align:center;color:#1a1a1a;font-weight:800;}
+/* --- RESULTADOS ULTRA COMPACTOS --- */
+.podium{display:grid; grid-template-columns: repeat(3, 1fr); gap:4px; max-width: 320px; margin: 0 auto;}
+.podium-slot{border-radius:4px;padding:4px 2px;text-align:center;color:#1a1a1a;font-weight:800;}
 .podium-slot.oro{background:linear-gradient(135deg,#FFD700,#FFA500)}
 .podium-slot.plata{background:linear-gradient(135deg,#E8E8E8,#A8A8A8)}
 .podium-slot.bronce{background:linear-gradient(135deg,#E09E5B,#A0522D)}
 .podium-pos{font-size:8px;text-transform:uppercase;opacity:.7}
-.podium-num{font-size:14px;font-weight:900;line-height:1;margin:2px 0}
+.podium-num{font-size:14px;font-weight:900;line-height:1;margin:1px 0}
 .podium-tp{font-size:10px;font-weight:900}
 
-.result-row{display:grid;grid-template-columns:20px 35px 1fr auto;gap:4px;align-items:center;
-  padding:3px 4px;border-radius:3px;margin-bottom:2px;background:#f8fafc;border:1px solid var(--border); font-size:11px;}
+/* Aquí estaba el problema: mucho espacio y textos duplicados */
+.result-row{
+  display:grid; 
+  grid-template-columns: 20px 35px 1fr 45px; 
+  gap:4px; align-items:center;
+  padding:2px 6px; border-radius:3px; margin-bottom:2px; 
+  background:#f8fafc; border:1px solid var(--border); 
+  font-size:10px;
+}
 .result-row.pos-1{border-left:3px solid var(--gold);background:#fffbeb}
 .result-row.pos-2{border-left:3px solid var(--silver)}
 .result-row.pos-3{border-left:3px solid var(--bronze);background:#fdf6ec}
+
 .result-rank{font-weight:900;color:var(--text-muted);text-align:center;}
 .result-num{font-weight:800;}
-.result-tp{font-weight:900;color:var(--accent);}
+.result-info{display:flex; justify-content:flex-start;} /* Aquí va la etiqueta de VAL/TRAMP */
+.result-tp{font-weight:900;color:var(--accent);text-align:right; font-size:11px;}
 
-.badge-valor{background:rgba(16,185,129,.15);color:#10b981; border:1px solid #10b981;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
-.badge-trampa{background:rgba(239,68,68,.15);color:#ef4444; border:1px solid #ef4444;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;margin-left:4px}
+.badge-valor{background:rgba(16,185,129,.15);color:#10b981; border:1px solid #10b981;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;}
+.badge-trampa{background:rgba(239,68,68,.15);color:#ef4444; border:1px solid #ef4444;padding:0 3px;border-radius:2px;font-size:8px;font-weight:800;}
 .error-msg{color:#ef4444;font-size:10px;font-weight:700;text-align:center;margin-top:2px}
-
-/* Ajuste para celulares muy pequeños (achica un poco las cajas) */
-@media(max-width:400px){
-  .table-header, .horse-card { grid-template-columns: 30px 60px 55px 45px 18px; gap: 2px; }
-}
 </style>
 </head>
 <body>
@@ -165,7 +168,6 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
     <button class="btn-add" onclick="addHorse()">+ Añadir</button>
   </div>
   
-  <!-- ENCABEZADOS -->
   <div class="table-header">
     <div>Nº</div>
     <div>Tiempo</div>
@@ -180,7 +182,7 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 </div>
 
 <div class="panel" id="podiumPanel" style="display:none;">
-  <h2>🏆 Podio</h2>
+  <h2 style="text-align:center; display:block; margin-bottom:2px;">🏆 Podio</h2>
   <div class="podium" id="podium"></div>
 </div>
 
@@ -253,7 +255,6 @@ function addHorseCard(h){
   const list=document.getElementById('horsesList');
   const card=document.createElement('div');
   card.className='horse-card';
-  // Los inputs ya no dicen "Ej:", para ahorrar espacio en las cajas pequeñas
   card.innerHTML=`
     <input class="h-num" type="number" placeholder="5" value="${h.num||''}" title="Número">
     <input class="h-tiempo" placeholder="70.4" value="${h.tiempo||''}" title="Tiempo Última">
@@ -263,7 +264,6 @@ function addHorseCard(h){
   `;
   list.appendChild(card);
 
-  // Salto automático con "Enter"
   const inputs = card.querySelectorAll('input');
   inputs.forEach((input, index) => {
     input.addEventListener('keydown', (e) => {
@@ -381,11 +381,12 @@ function renderResults(resultados){
       else if(r.ml <= 2.5) mlTag = '<span class="badge-trampa">TRAMP</span>';
     }
 
+    // SE ELIMINÓ EL TIEMPO DUPLICADO. Ahora la estructura es: Rank | Nº | Etiqueta | Tiempo
     row.innerHTML=`
       <div class="result-rank">${i+1}</div>
       <div class="result-num">#${r.num}</div>
-      <div><b>${r.tpProyectado.toFixed(2)}s</b> ${mlTag}</div>
-      <div class="result-tp">${r.tpProyectado.toFixed(2)}</div>`;
+      <div class="result-info">${mlTag}</div>
+      <div class="result-tp">${r.tpProyectado.toFixed(2)}s</div>`;
     list.appendChild(row);
   });
 }
