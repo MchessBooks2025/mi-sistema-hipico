@@ -3,136 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Hípico PRO | Motor de Clases</title>
+    <title>Sistema Hípico PRO | Terminal Profesional</title>
+    <!-- Fuentes Profesionales -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a; --panel-bg: #1e293b; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --accent: #3b82f6; --accent-hover: #2563eb;
-            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
-            --border: #334155; --valor: #c084fc; --gold: #fbbf24; --elite: #e879f9;
+            --bg-base: #0a0a0c;
+            --bg-panel: rgba(24, 24, 27, 0.7);
+            --bg-input: rgba(39, 39, 42, 0.5);
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(59, 130, 246, 0.5);
+            
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --text-dark: #52525b;
+            
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --accent-purple: #8b5cf6;
+            
+            --shadow-panel: 0 10px 30px -10px rgba(0,0,0,0.5);
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-color); color: var(--text-main); padding: 15px; font-size: 14px;
+            font-family: var(--font-sans); 
+            background-color: var(--bg-base); 
+            color: var(--text-main); 
+            padding: 20px; 
+            font-size: 13px;
             width: 100vw; overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05), transparent 25%);
+            background-attachment: fixed;
         }
 
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-        h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* HEADER */
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-light); 
+        }
+        h1 { 
+            font-size: 22px; font-weight: 800; letter-spacing: -0.5px; 
+            display: flex; align-items: center; gap: 10px;
+        }
+        h1 span { 
+            background: linear-gradient(90deg, #60a5fa, #c084fc); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .version-badge { 
+            background: rgba(59, 130, 246, 0.15); color: #60a5fa; 
+            padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; 
+            border: 1px solid rgba(59, 130, 246, 0.3); letter-spacing: 1px;
+        }
 
-        .top-dashboard { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        /* PANELES BASE */
+        .panel { 
+            background: var(--bg-panel); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-light); 
+            border-radius: 12px; padding: 15px; margin-bottom: 15px; 
+            box-shadow: var(--shadow-panel);
+            display: flex; flex-wrap: wrap; gap: 15px; align-items: center; 
+        }
+
+        /* DASHBOARD (Podio y Ticket) */
+        .top-dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-bottom: 15px; }
         
         .podium-panel {
-            flex: 2; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid var(--border); border-radius: 8px; padding: 15px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); display: none; flex-direction: column; justify-content: center;
+            background: linear-gradient(135deg, rgba(24,24,27,0.8) 0%, rgba(9,9,11,0.8) 100%);
+            border: 1px solid var(--border-light); border-radius: 12px; padding: 20px;
+            box-shadow: var(--shadow-panel); display: none; flex-direction: column; justify-content: center; gap: 12px;
         }
-        .podium-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px;}
-        .podium-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 100px;}
-        .podium-horse { font-size: 16px; font-weight: 700; flex: 1; }
-        .pos-1 { color: var(--success); }
-        .pos-2 { color: var(--warning); }
-        .pos-3 { color: #f97316; }
+        .podium-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px;}
+        .podium-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; width: 110px; font-weight: 600;}
+        .podium-horse { font-size: 16px; font-weight: 700; flex: 1; font-family: var(--font-sans); }
+        .podium-horse span.nro { font-family: var(--font-mono); font-size: 18px; margin-right: 8px; }
         
-        .bar-container { flex: 2; height: 10px; background: #334155; border-radius: 5px; overflow: hidden; margin-left: 10px;}
-        .bar-fill { height: 100%; transition: width 0.5s; }
-        .bar-1 { background: var(--success); width: 100%; }
-        .bar-2 { background: var(--warning); }
-        .bar-3 { background: #f97316; }
+        .pos-1 { color: var(--accent-green); text-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .pos-2 { color: var(--accent-gold); text-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+        .pos-3 { color: #f97316; text-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
+        
+        .bar-container { flex: 2; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-left: 15px;}
+        .bar-fill { height: 100%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px; }
+        .bar-1 { background: linear-gradient(90deg, #059669, var(--accent-green)); width: 100%; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .bar-2 { background: linear-gradient(90deg, #d97706, var(--accent-gold)); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .bar-3 { background: linear-gradient(90deg, #ea580c, #f97316); box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
 
+        /* TICKET DE APUESTAS */
         .ticket-panel {
-            flex: 1; background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent);
-            border-radius: 8px; padding: 15px; display: none; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); min-width: 250px;
+            background: linear-gradient(180deg, rgba(30, 58, 138, 0.2) 0%, rgba(24, 24, 27, 0.8) 100%); 
+            border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 20px; 
+            display: none; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.15); position: relative; overflow: hidden;
         }
-        .ticket-panel h3 { color: #60a5fa; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 5px; }
-        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
-        .ticket-line span:last-child { font-weight: bold; color: var(--gold); }
-        .btn-copy { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; width: 100%; transition: 0.2s; }
-        .btn-copy:hover { background: var(--accent-hover); }
+        .ticket-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+        }
+        .ticket-panel h3 { 
+            color: #93c5fd; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; 
+            margin-bottom: 15px; text-align: center; 
+        }
+        .ticket-line { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px;}
+        .ticket-line span:first-child { color: var(--text-muted); font-weight: 500; }
+        .ticket-line span:last-child { font-family: var(--font-mono); font-weight: 700; color: var(--text-main); font-size: 14px;}
+        .btn-copy { 
+            background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; 
+            padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; 
+            margin-top: 15px; width: 100%; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-copy:hover { filter: brightness(1.1); box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); transform: translateY(-1px); }
+
+        /* ALERTA DE RITMO */
+        .pace-alert {
+            display: none; width: 100%; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 13px;
+            align-items: center; gap: 12px; margin-bottom: 15px; border: 1px solid transparent;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* INPUTS Y CONTROLES */
+        .group-inputs { display: flex; gap: 12px; flex: 1; }
+        input, select { 
+            background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-main); 
+            padding: 10px 14px; border-radius: 8px; font-size: 13px; font-family: var(--font-sans); 
+            outline: none; transition: all 0.2s; width: 100%; font-weight: 500;
+        }
+        input:focus, select:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); background: rgba(39, 39, 42, 0.9); }
+        input::placeholder { color: var(--text-dark); }
+        .input-mono { font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.5px; }
+
+        button, .btn-link { 
+            padding: 10px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-size: 13px; 
+            text-decoration: none; font-family: var(--font-sans); justify-content: center;
+        }
+        .btn-primary { background: var(--accent-blue); color: white; } .btn-primary:hover { background: #2563eb; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); transform: translateY(-1px); }
+        .btn-success { background: var(--accent-green); color: white; font-weight: 700; } .btn-success:hover { background: #059669; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); transform: translateY(-1px); }
+        .btn-danger { background: transparent; color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3); } .btn-danger:hover { background: rgba(239, 68, 68, 0.1); border-color: var(--accent-red); }
+        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border-light); } .btn-outline:hover { background: var(--bg-input); border-color: var(--text-muted); }
+        .btn-warning { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); border: 1px solid rgba(245, 158, 11, 0.3); } .btn-warning:hover { background: rgba(245, 158, 11, 0.2); }
+        .btn-purple { background: rgba(139, 92, 246, 0.1); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); } .btn-purple:hover { background: rgba(139, 92, 246, 0.2); }
+        .btn-info { background: rgba(14, 165, 233, 0.1); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); } .btn-info:hover { background: rgba(14, 165, 233, 0.2); }
+        .btn-par { background: rgba(217, 119, 6, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); font-weight: 700; } .btn-par:hover { background: rgba(217, 119, 6, 0.25); }
+        .btn-calc { background: linear-gradient(135deg, #ec4899, #be185d); color: white; font-weight: 700; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3); } .btn-calc:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* TABLA DE DATOS PROFESIONAL */
+        .table-wrapper { 
+            background: var(--bg-panel); border: 1px solid var(--border-light); 
+            border-radius: 12px; overflow-x: auto; width: 100%; position: relative;
+            box-shadow: var(--shadow-panel); backdrop-filter: blur(12px);
+        }
         
-        .panel { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-        .group-inputs { display: flex; gap: 10px; flex: 1; }
-
-        input, select { background-color: #0f172a; border: 1px solid var(--border); color: var(--text-main); padding: 10px 12px; border-radius: 4px; font-size: 14px; outline: none; transition: border-color 0.2s; width: 100%; }
-        input:focus, select:focus { border-color: var(--accent); }
-
-        button, .btn-link { padding: 10px 16px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 14px; text-decoration: none; }
-        .btn-primary { background: var(--accent); color: white; } .btn-primary:hover { background: var(--accent-hover); }
-        .btn-success { background: var(--success); color: white; } .btn-success:hover { filter: brightness(1.1); }
-        .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); } .btn-danger:hover { background: var(--danger); color: white; }
-        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); } .btn-outline:hover { background: var(--border); }
-        .btn-warning { background: var(--warning); color: #000; } .btn-warning:hover { filter: brightness(1.1); }
-        .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
-        .btn-info { background: #0ea5e9; color: white; } .btn-info:hover { background: #0284c7; }
-        .btn-calc { background: #ec4899; color: white; text-decoration: none; padding: 10px 16px; border-radius: 4px; font-weight: 600; font-size: 14px; display: flex; align-items: center; transition: 0.2s; }
-        .btn-calc:hover { background: #db2777; }
-
-        .table-wrapper { background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; width: 100%; position: relative; }
-        
-        table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+        table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
         
         th { 
-            background-color: #1e293b; color: var(--text-muted); font-weight: 600; 
-            text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; 
-            padding: 12px 8px; text-align: center; border-bottom: 2px solid var(--border); 
-            white-space: nowrap; position: sticky; top: 0; z-index: 10;
+            background: rgba(24, 24, 27, 0.95); color: var(--text-muted); font-weight: 600; 
+            text-transform: uppercase; font-size: 10px; letter-spacing: 0.8px; 
+            padding: 14px 10px; text-align: center; border-bottom: 1px solid var(--border-light); 
+            white-space: nowrap; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px);
         }
         
-        td { padding: 8px; text-align: center; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        td { 
+            padding: 6px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.03); 
+            white-space: nowrap; transition: background 0.2s;
+        }
+        tr:hover td { background: rgba(255,255,255,0.02); }
 
-        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background-color: var(--panel-bg); width: 40px;}
-        th:nth-child(2), td:nth-child(2) { position: sticky; left: 40px; z-index: 5; background-color: var(--panel-bg); min-width: 60px;}
-        th:nth-child(3), td:nth-child(3) { position: sticky; left: 100px; z-index: 5; background-color: var(--panel-bg); min-width: 60px;}
-        th:nth-child(4), td:nth-child(4) { position: sticky; left: 160px; z-index: 5; background-color: var(--panel-bg); border-right: 1px solid var(--border); min-width: 150px;}
+        /* Sticky Columns */
+        th:nth-child(1), td:nth-child(1) { position: sticky; left: 0; z-index: 5; background: var(--bg-base); width: 40px; }
+        th:nth-child(2), td:nth-child(2) { position: sticky; left: 40px; z-index: 5; background: var(--bg-base); min-width: 70px; }
+        th:nth-child(3), td:nth-child(3) { position: sticky; left: 110px; z-index: 5; background: var(--bg-base); min-width: 60px; }
+        th:nth-child(4), td:nth-child(4) { position: sticky; left: 170px; z-index: 5; background: var(--bg-base); border-right: 1px solid var(--border-light); min-width: 160px; text-align: left; padding-left: 15px;}
 
-        .val-rankin-1 { color: var(--success); font-weight: bold; font-size: 16px; }
-        .val-rankin-2 { color: var(--warning); font-weight: bold; font-size: 15px; }
-        .val-rankin-3 { color: #f97316; font-weight: bold; }
+        /* Inputs dentro de la tabla */
+        td input, td select {
+            background: transparent; border: 1px solid transparent; color: var(--text-main);
+            padding: 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+            text-align: center; transition: all 0.2s;
+        }
+        td input:hover, td select:hover { background: rgba(255,255,255,0.05); }
+        td input:focus, td select:focus { background: var(--bg-input); border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
-        .val-alerta { display: inline-block; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 11px; letter-spacing: 0px; }
-        .alerta-valor { background-color: rgba(192, 132, 252, 0.2); color: var(--valor); border: 1px solid var(--valor); }
-        .alerta-trampa { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
-        .alerta-equipo-frio { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #60a5fa; }
-        .alerta-equipo-caliente { background-color: rgba(251, 191, 36, 0.2); color: var(--gold); border: 1px solid var(--gold); }
-        .alerta-elite { background-color: rgba(232, 121, 249, 0.2); color: var(--elite); border: 1px solid var(--elite); }
+        /* Ajustes visuales de columnas específicas */
+        td:nth-child(4) input { text-align: left; font-family: var(--font-sans); font-weight: 700; }
+        td:nth-child(5) select, td:nth-child(6) select { font-family: var(--font-sans); font-size: 11px; text-align: left; }
 
-        .text-sindatos { color: var(--text-muted); font-style: italic; font-size: 12px; }
-        .text-destacado { font-weight: 700; color: white; padding: 2px; font-size: 14px;}
-        .input-nro { font-weight: 700 !important; color: #f8fafc !important; }
+        /* BADGES Y ESTADOS */
+        .val-rankin-1 { color: var(--accent-green); font-weight: 800; font-family: var(--font-mono); font-size: 15px; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .val-rankin-2 { color: var(--accent-gold); font-weight: 800; font-family: var(--font-mono); font-size: 14px; }
+        .val-rankin-3 { color: #f97316; font-weight: 800; font-family: var(--font-mono); font-size: 13px; }
         
-        .row-scratched td { opacity: 0.4; background-color: rgba(0,0,0,0.2) !important; }
-        .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: #ef4444; }
+        .val-alerta { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase;}
+        .alerta-valor { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .alerta-trampa { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alerta-equipo-frio { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .alerta-equipo-caliente { background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .alerta-elite { background: rgba(232, 121, 249, 0.15); color: var(--elite); border: 1px solid rgba(232, 121, 249, 0.3); }
 
-        .btn-scratch { background: transparent; border: 1px solid transparent; font-size: 18px; padding: 2px; cursor: pointer; transition: 0.2s; border-radius: 50%; }
-        .btn-scratch:hover { background: rgba(255,255,255,0.1); }
+        .text-sindatos { color: var(--text-dark); font-style: italic; font-size: 11px; }
+        .text-destacado { font-weight: 700; color: var(--text-main); font-family: var(--font-mono); font-size: 13px; }
+        
+        .row-scratched td { opacity: 0.3; background: rgba(0,0,0,0.4) !important; }
+        .row-scratched td input, .row-scratched td select { text-decoration: line-through; color: var(--accent-red); }
 
-        /* ESTILOS DE MODALES */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--accent); border-radius: 10px; padding: 25px; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; }
-        .modal-content h2 { color: #60a5fa; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 22px;}
+        .btn-scratch { background: transparent; border: none; font-size: 16px; padding: 4px; cursor: pointer; transition: 0.2s; border-radius: 4px; opacity: 0.6; }
+        .btn-scratch:hover { opacity: 1; transform: scale(1.1); background: rgba(255,255,255,0.1); }
+
+        /* ESTILOS DE MODALES PROFESIONALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { 
+            background: #18181b; border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; 
+            width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
+            animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .form-group label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .form-group input, .form-group select { padding: 12px; font-size: 16px; }
+        .modal-content h2 { color: var(--text-main); margin-bottom: 25px; font-weight: 800; font-size: 20px; letter-spacing: -0.5px;}
         
-        .form-section-title { grid-column: 1 / -1; font-size: 15px; color: var(--gold); font-weight: bold; margin-top: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select { padding: 12px; font-size: 14px; }
         
-        .btn-save { background: var(--success); color: white; padding: 15px; font-size: 18px; width: 100%; margin-top: 20px; border-radius: 6px; cursor: pointer; border: none; font-weight: bold;}
-        .btn-save:hover { filter: brightness(1.1); }
-        .btn-close { background: var(--danger); color: white; margin-top: 10px; width: 100%; justify-content: center; padding: 12px; font-size: 16px; border-radius: 6px; cursor: pointer; border: none;}
+        .form-section-title { grid-column: 1 / -1; font-size: 14px; color: var(--text-main); font-weight: 700; margin-top: 15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+        
+        .btn-save { background: var(--accent-green); color: white; padding: 16px; font-size: 15px; width: 100%; margin-top: 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;}
+        .btn-save:hover { filter: brightness(1.1); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+        .btn-close { background: rgba(255,255,255,0.05); color: var(--text-main); margin-top: 15px; width: 100%; justify-content: center; padding: 14px; font-size: 14px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-light); font-weight: 600; transition: 0.2s;}
+        .btn-close:hover { background: rgba(255,255,255,0.1); }
+        
+        .config-list { max-height: 250px; overflow-y: auto; border: 1px solid var(--border-light); border-radius: 8px; padding: 10px; margin-top: 15px; background: rgba(0,0,0,0.2); }
+        .config-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; align-items: center; }
+        .config-item:last-child { border-bottom: none; }
+        .config-item span { font-family: var(--font-sans); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🏇 SISTEMA HÍPICO PRO</h1>
-        <div style="color: var(--text-muted); font-size: 12px;">v24.0 - Motor de Clases</div>
+        <h1>🏇 <span>SISTEMA HÍPICO PRO</span></h1>
+        <div class="version-badge">V28.0 PROFESSIONAL TERMINAL</div>
     </header>
+
+    <!-- ALERTA DE RITMO -->
+    <div class="pace-alert" id="paceAlert">
+        <span style="font-size: 18px;">⚠️</span> <span id="paceAlertText"></span>
+    </div>
 
     <div class="top-dashboard">
         <div class="podium-panel" id="podiumPanel">
@@ -142,56 +268,58 @@
         </div>
         <div class="ticket-panel" id="ticketPanel">
             <div>
-                <h3>🎫 Jugada Sugerida</h3>
-                <div class="ticket-line"><span>Ganador:</span> <span id="tkWin">-</span></div>
-                <div class="ticket-line"><span>Exacta:</span> <span id="tkExacta">-</span></div>
-                <div class="ticket-line"><span>Trifecta:</span> <span id="tkTrifecta">-</span></div>
-                <div class="ticket-line"><span>Pool de 4:</span> <span id="tkPool">-</span></div>
+                <h3>🎫 Ticket Sugerido</h3>
+                <div class="ticket-line"><span>Ganador</span> <span id="tkWin">-</span></div>
+                <div class="ticket-line"><span>Exacta</span> <span id="tkExacta">-</span></div>
+                <div class="ticket-line"><span>Trifecta</span> <span id="tkTrifecta">-</span></div>
+                <div class="ticket-line"><span>Pool de 4</span> <span id="tkPool">-</span></div>
             </div>
             <button class="btn-copy" onclick="copiarTicket()">📋 Copiar Jugada</button>
         </div>
     </div>
 
+    <!-- BARRA DE HERRAMIENTAS PRINCIPAL -->
     <div class="panel">
         <div style="display: flex; gap: 10px; align-items: center; flex: 1; flex-wrap: wrap;">
-            <label style="color: var(--gold); font-weight: bold; font-size: 14px;">Hipódromo:</label>
-            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 140px; border-color: var(--gold); font-weight: bold; color: var(--gold);"></select>
+            <select id="hipodromoActivo" onchange="cambiarHipodromo()" style="width: 150px; border-color: var(--accent-gold); font-weight: 700; color: var(--accent-gold);"></select>
             
-            <label style="color: var(--gold); font-weight: bold; font-size: 14px; margin-left: 10px;">Ver Carrera:</label>
-            <select id="filtroCarrera" onchange="renderTabla()" style="width: 100px; border-color: var(--gold); font-weight: bold; color: var(--gold);">
+            <select id="filtroCarrera" onchange="renderTabla()" style="width: 120px; border-color: var(--accent-blue); font-weight: 700; color: var(--accent-blue);">
                 <option value="TODAS">TODAS</option>
             </select>
             
-            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 8px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️</button>
-            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 8px 12px;" title="Importar archivo JSON con stats">📥 Stats</button>
+            <div style="height: 24px; width: 1px; background: var(--border-light); margin: 0 5px;"></div>
+            
+            <button onclick="abrirModalConfig()" class="btn-warning" style="padding: 9px 12px;" title="Actualizar Jinetes y Entrenadores">⚙️ Stats</button>
+            <button onclick="abrirModalParTimes()" class="btn-par" style="padding: 9px 12px;" title="Configurar Tiempos Par">⏱️ Par Times</button>
+            <button onclick="document.getElementById('fileInputStats').click()" class="btn-purple" style="padding: 9px 12px;" title="Importar archivo JSON con stats">📥 Stats JSON</button>
             <input type="file" id="fileInputStats" accept=".json" style="display: none;" onchange="leerArchivoStats(event)">
-            <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 8px 12px;" title="Sube el JSON de la carrera">🏁 Importar Carrera</button>
+            <button onclick="document.getElementById('fileInputCarrera').click()" class="btn-info" style="padding: 9px 12px;" title="Sube el JSON de la carrera">🏁 Carrera JSON</button>
             <input type="file" id="fileInputCarrera" accept=".json" style="display: none;" onchange="importarCarreraJSON(event)">
             
-            <a href="calculadora.html" target="_blank" class="btn-calc">🧮 Calculadora</a>
+            <a href="calculadora.html" target="_blank" class="btn-calc" style="padding: 9px 16px;">🧮 Calculadora</a>
         </div>
+        
         <div class="group-inputs" style="flex: 1; justify-content: flex-end;">
-            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 90px; font-size: 14px;">
-            <!-- AGREGO ONINPUT PARA ACTUALIZAR EL MODAL AUTOMÁTICAMENTE -->
-            <input type="number" id="distancia" placeholder="Distancia (mts)" style="width: 110px; font-size: 14px;" oninput="actualizarDistanciasModal(this.value)">
-            <input type="text" id="lote_hoy" placeholder="Clase Hoy (ej: clm 12500b)" style="width: 160px; font-size: 14px; color: var(--gold); font-weight: bold;" onchange="calcularTodo()">
-            <button onclick="abrirFormularioCaballo()" class="btn-primary" style="width: auto; padding: 10px 20px;">➕ Añadir Caballo</button>
+            <input type="number" id="carrera" placeholder="Carrera N°" style="width: 100px; font-family: var(--font-mono); font-weight: bold;">
+            <input type="number" id="distancia" placeholder="Distancia" style="width: 110px; font-family: var(--font-mono); font-weight: bold;" oninput="actualizarDistanciasModal(this.value)">
+            <input type="text" id="lote_hoy" placeholder="Clase Hoy (Lote)" style="width: 170px; color: var(--accent-gold); font-weight: bold;" onchange="calcularTodo()">
+            <button onclick="abrirFormularioCaballo()" class="btn-primary" style="width: auto; padding: 9px 20px;">➕ Añadir Caballo</button>
         </div>
     </div>
 
-    <div class="panel" style="justify-content: space-between;">
-        <div style="display: flex; gap: 10px;">
-            <button onclick="calcularTodo()" class="btn-success" style="padding: 12px 25px; font-size: 16px;">🧮 Ejecutar Cálculos Mágicos</button>
-        </div>
-        <div style="display: flex; gap: 5px;">
+    <div class="panel" style="justify-content: space-between; padding: 10px 15px;">
+        <button onclick="calcularTodo()" class="btn-success" style="padding: 10px 30px;">⚡ Ejecutar Cálculos</button>
+        
+        <div style="display: flex; gap: 8px;">
             <button onclick="exportarCSV()" class="btn-outline">📊 Exportar</button>
             <button onclick="exportarDatos()" class="btn-outline">💾 Respaldo</button>
             <input type="file" id="importarArchivo" style="display: none;" accept=".json" onchange="importarDatos(event)">
             <button onclick="document.getElementById('importarArchivo').click()" class="btn-outline">📂 Restaurar</button>
-            <button onclick="borrarCarreraActual()" class="btn-danger" title="Borra solo la carrera seleccionada arriba">🗑️ Borrar Carrera</button>
+            <button onclick="borrarCarreraActual()" class="btn-danger">🗑️ Borrar Carrera</button>
         </div>
     </div>
 
+    <!-- TABLA DE DATOS -->
     <div class="table-wrapper">
         <table>
             <thead>
@@ -201,8 +329,9 @@
                     <th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th>
                     <th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th>
                     <th>Pto</th><th>Kg</th><th>Sty</th><th>Q</th><th>ML</th>
-                    <th style="color: var(--warning);">Clase Ant.</th>
-                    <th style="color: var(--success);">Aju. Lote</th>
+                    <th style="color: var(--accent-gold);">Clase Ant.</th>
+                    <th style="color: var(--accent-green);">Aju. Lote</th>
+                    <th style="color: var(--accent-purple);">Aju. Ritmo</th>
                     <th>TP</th><th>Aju</th><th>TP A</th><th>Rk</th><th>Dif</th><th>Est</th>
                     <th>Alerta</th><th>Tips</th><th>Notas</th>
                 </tr>
@@ -224,45 +353,80 @@
                 <div class="form-group"><label>Clase Anterior (Lote)</label><input type="text" id="f_lote" placeholder="Ej: alw4000s"></div>
             </div>
 
-            <div class="form-section-title">Tiempos y Distancias (Mínimo 4 carreras)</div>
+            <div class="form-section-title"><span style="color: var(--accent-blue);">⏱️</span> Tiempos y Distancias (Mínimo 4 carreras)</div>
             <div class="form-grid">
-                <div class="form-group"><label>T1 (Tiempo 1)</label><input type="text" id="f_t1" placeholder="Ej: 70.4"></div>
-                <div class="form-group"><label>D1 (Distancia 1)</label><input type="number" id="f_d1" placeholder="Ej: 1400"></div>
-                <div class="form-group"><label>T2 (Tiempo 2)</label><input type="text" id="f_t2" placeholder="Ej: 71.0"></div>
-                <div class="form-group"><label>D2 (Distancia 2)</label><input type="number" id="f_d2" placeholder="Ej: 1400"></div>
-                <div class="form-group"><label>T3 (Tiempo 3)</label><input type="text" id="f_t3" placeholder="Ej: 69.8"></div>
-                <div class="form-group"><label>D3 (Distancia 3)</label><input type="number" id="f_d3" placeholder="Ej: 1400"></div>
-                <div class="form-group"><label>T4 (Tiempo 4)</label><input type="text" id="f_t4" placeholder="Ej: 70.2"></div>
-                <div class="form-group"><label>D4 (Distancia 4)</label><input type="number" id="f_d4" placeholder="Ej: 1400"></div>
-                <div class="form-group"><label>T5 (Opcional)</label><input type="text" id="f_t5" placeholder="Ej: 70.1"></div>
-                <div class="form-group"><label>D5 (Opcional)</label><input type="number" id="f_d5" placeholder="Ej: 1400"></div>
+                <div class="form-group"><label>T1 (Tiempo 1)</label><input type="text" id="f_t1" placeholder="Ej: 70.4" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>D1 (Distancia 1)</label><input type="number" id="f_d1" placeholder="Ej: 1400" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>T2 (Tiempo 2)</label><input type="text" id="f_t2" placeholder="Ej: 71.0" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>D2 (Distancia 2)</label><input type="number" id="f_d2" placeholder="Ej: 1400" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>T3 (Tiempo 3)</label><input type="text" id="f_t3" placeholder="Ej: 69.8" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>D3 (Distancia 3)</label><input type="number" id="f_d3" placeholder="Ej: 1400" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>T4 (Tiempo 4)</label><input type="text" id="f_t4" placeholder="Ej: 70.2" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>D4 (Distancia 4)</label><input type="number" id="f_d4" placeholder="Ej: 1400" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>T5 (Opcional)</label><input type="text" id="f_t5" placeholder="Ej: 70.1" style="font-family: var(--font-mono);"></div>
+                <div class="form-group"><label>D5 (Opcional)</label><input type="number" id="f_d5" placeholder="Ej: 1400" style="font-family: var(--font-mono);"></div>
             </div>
 
-            <button onclick="guardarCaballoDesdeFormulario()" class="btn-save">💾 Guardar Caballo</button>
+            <button onclick="guardarCaballoDesdeFormulario()" class="btn-save">Guardar Caballo</button>
             <button onclick="cerrarFormularioCaballo()" class="btn-close">Cancelar</button>
         </div>
     </div>
 
-    <!-- MODAL DE CONFIGURACIÓN -->
+    <!-- MODAL DE PAR TIMES -->
+    <div class="modal-overlay" id="modalParTimes">
+        <div class="modal-content">
+            <h2>⏱️ Configuración de Tiempos Par</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                Define el tiempo estándar (en segundos) para cada clase y distancia. El sistema usará esto para calcular el ajuste exacto por cambio de clase.
+            </p>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Distancia (mts)</label>
+                    <input type="number" id="parDist" placeholder="Ej: 1400">
+                </div>
+                <div class="form-group">
+                    <label>Clase (Lote)</label>
+                    <input type="text" id="parClase" placeholder="Ej: clm 12500">
+                </div>
+                <div class="form-group">
+                    <label>Tiempo Par (seg)</label>
+                    <input type="number" step="0.1" id="parTiempo" placeholder="Ej: 84.5">
+                </div>
+            </div>
+            <button onclick="guardarParTime()" class="btn-save" style="background: var(--accent-blue);">Guardar Par Time</button>
+            
+            <div style="margin-top: 25px;">
+                <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--text-muted);">LISTA DE PAR TIMES (HIPÓDROMO ACTUAL)</h3>
+                <div class="config-list" id="listaPars"></div>
+            </div>
+            
+            <button onclick="cerrarModalParTimes()" class="btn-close">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN DE STATS -->
     <div class="modal-overlay" id="modalConfig">
         <div class="modal-content">
             <h2>⚙️ Actualizar Jinetes / Entrenadores</h2>
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">Si no tienes el dato de 1-2-3%, déjalo en blanco.</p>
-            <div class="form-group" style="flex-direction: row;">
-                <select id="configHipodromo" onchange="cargarStatsConfig()" style="font-size: 16px; padding: 10px;"></select>
-                <button onclick="crearHipodromo()" class="btn-primary" style="flex: 0.5;">Nuevo</button>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Si no tienes el dato de 1-2-3%, déjalo en blanco.</p>
+            
+            <div class="form-group" style="flex-direction: row; margin-bottom: 15px;">
+                <select id="configHipodromo" onchange="cargarStatsConfig()" style="font-size: 14px; padding: 12px;"></select>
+                <button onclick="crearHipodromo()" class="btn-primary" style="flex: 0.5;">Nuevo Hipódromo</button>
             </div>
-            <div class="form-group" style="flex-direction: row;">
-                <select id="tipoPersona" onchange="cargarStatsConfig()" style="font-size: 16px; padding: 10px;">
+            
+            <div class="form-group" style="flex-direction: row; gap: 10px;">
+                <select id="tipoPersona" onchange="cargarStatsConfig()" style="font-size: 14px; padding: 12px; width: 120px;">
                     <option value="jockey">Jinete</option>
                     <option value="trainer">Entrenador</option>
                 </select>
-                <input type="text" id="nombrePersona" placeholder="Nombre" style="font-size: 16px; padding: 10px;">
-                <input type="number" id="porcWin" placeholder="% Win" style="max-width: 100px; font-size: 16px; padding: 10px;">
-                <input type="number" id="porcPlace" placeholder="% 1-2-3" style="max-width: 100px; font-size: 16px; padding: 10px;">
-                <button onclick="guardarPersona()" class="btn-success" style="font-size: 16px; padding: 10px;">Guardar</button>
+                <input type="text" id="nombrePersona" placeholder="Nombre" style="font-size: 14px; padding: 12px;">
+                <input type="number" id="porcWin" placeholder="% Win" style="max-width: 100px; font-size: 14px; padding: 12px; font-family: var(--font-mono);">
+                <input type="number" id="porcPlace" placeholder="% 1-2-3" style="max-width: 100px; font-size: 14px; padding: 12px; font-family: var(--font-mono);">
+                <button onclick="guardarPersona()" class="btn-success" style="font-size: 14px; padding: 12px;">Guardar</button>
             </div>
-            <div class="config-list" id="listaStats"></div>
+            
+            <div class="config-list" id="listaStats" style="margin-top: 25px;"></div>
             <button onclick="cerrarModalConfig()" class="btn-close">Cerrar y Volver</button>
         </div>
     </div>
@@ -272,9 +436,9 @@
         <div class="modal-content">
             <h2>📥 ¿A qué hipódromo pertenecen estas estadísticas?</h2>
             <div class="form-group" style="flex-direction: row; margin-top: 20px;">
-                <select id="selectImportHipodromo" style="font-size: 16px; padding: 12px;"></select>
+                <select id="selectImportHipodromo" style="font-size: 16px; padding: 15px;"></select>
             </div>
-            <button onclick="confirmarImportacion()" class="btn-success" style="width: 100%; padding: 15px; font-size: 16px; margin-top: 20px;">Confirmar Importación</button>
+            <button onclick="confirmarImportacion()" class="btn-success" style="width: 100%; padding: 16px; font-size: 16px; margin-top: 25px;">Confirmar Importación</button>
             <button onclick="cerrarModalImport()" class="btn-close">Cancelar</button>
         </div>
     </div>
@@ -289,15 +453,19 @@
         };
 
         let DB_HIPODROMOS = JSON.parse(localStorage.getItem('hipodromoDB')) || DB_DEFAULT;
+        let DB_PARS = JSON.parse(localStorage.getItem('parTimesDB')) || {
+            "La Rinconada": {
+                "1400": { "clm 12500": 84.5, "alw 4000": 86.0 }
+            }
+        };
         let caballos = JSON.parse(localStorage.getItem('caballosHipicosElite')) || [];
         let JOCKEYS_ACTUALES = {}; let TRAINERS_ACTUALES = {}; let dataTemporalImport = null;
 
         function guardarDB() { localStorage.setItem('hipodromoDB', JSON.stringify(DB_HIPODROMOS)); }
+        function guardarPars() { localStorage.setItem('parTimesDB', JSON.stringify(DB_PARS)); }
 
-        // --- NUEVA FUNCIÓN: AUTOCOMPLETAR DISTANCIAS EN EL MODAL ---
         function actualizarDistanciasModal(nuevaDist) {
             if (!nuevaDist) return;
-            // Si el formulario de añadir caballo está abierto, actualizamos sus 5 casillas
             if (document.getElementById('modalFormulario').style.display === 'flex') {
                 for (let i = 1; i <= 5; i++) {
                     const input = document.getElementById('f_d' + i);
@@ -306,28 +474,84 @@
             }
         }
 
-        // --- EL MOTOR DE CLASES ---
         function getClassScore(loteStr) {
             if (!loteStr) return NaN;
             let s = loteStr.toString().toLowerCase().trim();
-            
             let base = 0;
-            if (s.includes('md')) base = 10;         // Maiden
-            else if (s.includes('str')) base = 15;   // Starter
-            else if (s.includes('clm')) base = 20;   // Claiming
-            else if (s.includes('oc')) base = 30;    // Optional Claiming
-            else if (s.includes('alw')) base = 40;   // Allowance
-            else if (s.includes('stk')) base = 50;   // Stakes
-            else base = 20; // Default a Claiming si no se reconoce
-
-            // Extraer el número (el valor/purse)
+            if (s.includes('md')) base = 10;
+            else if (s.includes('str')) base = 15;
+            else if (s.includes('clm')) base = 20;
+            else if (s.includes('oc')) base = 30;
+            else if (s.includes('alw')) base = 40;
+            else if (s.includes('stk')) base = 50;
+            else base = 20;
             let match = s.match(/\d+/);
             let value = match ? parseInt(match[0]) : 0;
-            
-            // Convertir a un decimal (ej. 12500 -> 12.5)
-            let valScore = value / 1000;
+            return base + (value / 1000);
+        }
 
-            return base + valScore;
+        function abrirModalParTimes() {
+            document.getElementById('modalParTimes').style.display = 'flex';
+            document.getElementById('parDist').value = document.getElementById('distancia').value;
+            document.getElementById('parClase').value = document.getElementById('lote_hoy').value;
+            document.getElementById('parTiempo').value = '';
+            renderListaPars();
+        }
+
+        function cerrarModalParTimes() { document.getElementById('modalParTimes').style.display = 'none'; }
+
+        function guardarParTime() {
+            const hipo = document.getElementById('hipodromoActivo').value;
+            const dist = document.getElementById('parDist').value.trim();
+            const clase = document.getElementById('parClase').value.trim().toLowerCase();
+            const tiempo = parseFloat(document.getElementById('parTiempo').value);
+
+            if (!dist || !clase || isNaN(tiempo)) { alert("⚠️ Completa todos los campos."); return; }
+
+            if (!DB_PARS[hipo]) DB_PARS[hipo] = {};
+            if (!DB_PARS[hipo][dist]) DB_PARS[hipo][dist] = {};
+            
+            DB_PARS[hipo][dist][clase] = tiempo;
+            guardarPars();
+            renderListaPars();
+            
+            document.getElementById('parClase').value = '';
+            document.getElementById('parTiempo').value = '';
+        }
+
+        function eliminarParTime(dist, clase) {
+            const hipo = document.getElementById('hipodromoActivo').value;
+            if (confirm(`¿Eliminar el Par Time para ${clase} en ${dist}m?`)) {
+                if (DB_PARS[hipo] && DB_PARS[hipo][dist]) {
+                    delete DB_PARS[hipo][dist][clase];
+                    if (Object.keys(DB_PARS[hipo][dist]).length === 0) delete DB_PARS[hipo][dist];
+                    guardarPars();
+                    renderListaPars();
+                }
+            }
+        }
+
+        function renderListaPars() {
+            const hipo = document.getElementById('hipodromoActivo').value;
+            const lista = document.getElementById('listaPars');
+            lista.innerHTML = '';
+
+            if (!DB_PARS[hipo] || Object.keys(DB_PARS[hipo]).length === 0) {
+                lista.innerHTML = '<div style="padding: 15px; color: var(--text-muted); font-size: 13px; text-align: center;">No hay Par Times configurados.</div>';
+                return;
+            }
+
+            for (let dist in DB_PARS[hipo]) {
+                for (let clase in DB_PARS[hipo][dist]) {
+                    const t = DB_PARS[hipo][dist][clase];
+                    lista.innerHTML += `
+                        <div class="config-item">
+                            <span>📏 <b>${dist}m</b> | 🏷️ ${clase} | ⏱️ <b style="font-family:var(--font-mono); color: var(--accent-blue);">${t}s</b></span>
+                            <button onclick="eliminarParTime('${dist}', '${clase}')" style="background:rgba(239,68,68,0.1); border:none; color:var(--accent-red); cursor:pointer; font-size: 14px; padding: 6px 10px; border-radius: 4px;">❌</button>
+                        </div>
+                    `;
+                }
+            }
         }
 
         function actualizarFiltroCarreras() {
@@ -343,14 +567,10 @@
         function abrirFormularioCaballo() {
             const car = document.getElementById('carrera').value;
             const dist = document.getElementById('distancia').value;
-            if (!car || !dist) { alert("⚠️ Primero escribe la Carrera N° y la Distancia en la barra superior."); return; }
+            if (!car || !dist) { alert("⚠️ Primero escribe la Carrera N° y la Distancia."); return; }
             document.getElementById('modalFormulario').style.display = 'flex';
             ['nro','name','kilos','puesto','ml','lote','t1','d1','t2','d2','t3','d3','t4','d4','t5','d5'].forEach(id => document.getElementById('f_'+id).value = '');
-            
-            // MEJORA: Pre-llenar las 5 distancias con la distancia de arriba
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById('f_d' + i).value = dist;
-            }
+            for (let i = 1; i <= 5; i++) { document.getElementById('f_d' + i).value = dist; }
         }
 
         function cerrarFormularioCaballo() { document.getElementById('modalFormulario').style.display = 'none'; }
@@ -372,14 +592,14 @@
                 t4: document.getElementById('f_t4').value, d4: document.getElementById('f_d4').value,
                 t5: document.getElementById('f_t5').value, d5: document.getElementById('f_d5').value,
                 notes: '', tip: '', jockey_name: '', trainer_name: '', j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
-                style: '', quirin: '', tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
+                style: '', quirin: '', tpReal: '', ajuste: '', ajusteLote: 0, ajusteRitmo: 0, tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
             });
             guardarSilencioso(); renderTabla(); calcularTodo(); cerrarFormularioCaballo();
         }
 
         function borrarCarreraActual() {
             const hipo = document.getElementById('hipodromoActivo').value; const car = document.getElementById('carrera').value;
-            if (!car) { alert("⚠️ Escribe el número de la carrera que quieres borrar."); return; }
+            if (!car) { alert("⚠️ Escribe el número de la carrera."); return; }
             if (confirm(`¿Borrar la Carrera ${car} del hipódromo ${hipo}?`)) {
                 caballos = caballos.filter(c => !(c.hipodromo === hipo && c.carrera === parseInt(car)));
                 guardarSilencioso(); renderTabla();
@@ -403,11 +623,10 @@
                             scratched: false, nro: item.nro || '', name: item.nombre || '', notes: '', tip: '', jockey_name: item.jockey || '', trainer_name: item.entrenador || '',
                             j_win: '', j_place: '', t_win: '', t_place: '', efec_equipo: '',
                             t1: item.t1 || '', t2: item.t2 || '', t3: item.t3 || '', t4: item.t4 || '', t5: item.t5 || '', 
-                            // MEJORA: Si el JSON no trae distancia, usa la de la carrera para todas
                             d1: item.d1 || distancia, d2: item.d2 || distancia, d3: item.d3 || distancia, d4: item.d4 || distancia, d5: item.d5 || distancia,
                             puesto: item.puesto || '', kilos: item.kilos || '', style: '', quirin: '', ml: item.ml || '',
                             lote: item.lote || '',
-                            tpReal: '', ajuste: '', tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
+                            tpReal: '', ajuste: '', ajusteLote: 0, ajusteRitmo: 0, tpAjustado: '', ranking: '', dif: '', est: '', alerta: ''
                         }); agregados++;
                     });
                     if (agregados > 0) { guardarSilencioso(); renderTabla(); calcularTodo(); alert(`¡Se importaron ${agregados} caballos!`); }
@@ -493,10 +712,10 @@
             if (!DB_HIPODROMOS[hipo]) return;
             if (tipo === 'jockey') {
                 const jockeys = DB_HIPODROMOS[hipo].jockeys;
-                for (let j in jockeys) { const pStr = jockeys[j].place !== null ? `${jockeys[j].place}%` : 'N/D'; lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> - W: ${jockeys[j].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`; }
+                for (let j in jockeys) { const pStr = jockeys[j].place !== null ? `${jockeys[j].place}%` : 'N/D'; lista.innerHTML += `<div class="config-item"><span>👤 <b>${j}</b> - W: ${jockeys[j].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('jockey', '${j}')" style="background:rgba(239,68,68,0.1); border:none; color:var(--accent-red); cursor:pointer; font-size:14px; padding:6px 10px; border-radius:4px;">❌</button></div>`; }
             } else {
                 const trainers = DB_HIPODROMOS[hipo].trainers;
-                for (let t in trainers) { const pStr = trainers[t].place !== null ? `${trainers[t].place}%` : 'N/D'; lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> - W: ${trainers[t].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></div>`; }
+                for (let t in trainers) { const pStr = trainers[t].place !== null ? `${trainers[t].place}%` : 'N/D'; lista.innerHTML += `<div class="config-item"><span>🎓 <b>${t}</b> - W: ${trainers[t].win}% | P: ${pStr}</span> <button onclick="eliminarPersona('trainer', '${t}')" style="background:rgba(239,68,68,0.1); border:none; color:var(--accent-red); cursor:pointer; font-size:14px; padding:6px 10px; border-radius:4px;">❌</button></div>`; }
             }
         }
 
@@ -547,27 +766,34 @@
             caballosFiltrados.forEach(c => {
                 const tr = document.createElement('tr');
                 if (c.scratched) tr.classList.add('row-scratched'); 
-                let efecColor = "#94a3b8";
-                if (c.efec_equipo !== "" && c.efec_equipo !== "-") { const efec = parseFloat(c.efec_equipo); if (efec >= 40) efecColor = "var(--gold)"; else if (efec < 25) efecColor = "#60a5fa"; }
+                let efecColor = "var(--text-muted)";
+                if (c.efec_equipo !== "" && c.efec_equipo !== "-") { const efec = parseFloat(c.efec_equipo); if (efec >= 40) efecColor = "var(--accent-gold)"; else if (efec < 25) efecColor = "#60a5fa"; }
                 let jSelect = jockeyOptions.replace(`value="${c.jockey_name}"`, `value="${c.jockey_name}" selected`);
                 let tSelect = trainerOptions.replace(`value="${c.trainer_name}"`, `value="${c.trainer_name}" selected`);
                 let tipSelect = tipOptions.replace(`value="${c.tip}"`, `value="${c.tip}" selected`);
                 
+                let colorAjusteLote = 'var(--text-muted)';
+                if (c.ajusteLote > 0) colorAjusteLote = 'var(--accent-red)';
+                else if (c.ajusteLote < 0) colorAjusteLote = 'var(--accent-green)';
+
+                let colorAjusteRitmo = 'var(--text-muted)';
+                if (c.ajusteRitmo > 0) colorAjusteRitmo = 'var(--accent-red)';
+                else if (c.ajusteRitmo < 0) colorAjusteRitmo = 'var(--accent-green)';
+
                 tr.innerHTML = `
                     <td><button class="btn-scratch" onclick="toggleRetirado(${c.id})" title="${c.scratched ? 'Restaurar' : 'Retirar'}">${c.scratched ? '♻️' : '🚫'}</button></td>
-                    <td><span style="font-weight: 600; color: #94a3b8; font-size: 12px;">${c.hipodromo}</span></td>
-                    <td style="font-size: 13px; font-weight:bold; color:var(--gold);">${c.carrera}</td>
-                    <td style="text-align:left; font-weight:bold; color:white; padding-left: 10px;">#${c.nro} - ${c.name}</td>
-                    <td><select onchange="seleccionarJockey(${c.id}, this.value)" style="text-align:left;">${jSelect}</select></td>
-                    <td><select onchange="seleccionarTrainer(${c.id}, this.value)" style="text-align:left;">${tSelect}</select></td>
-                    <td><span style="font-weight: bold; color: ${efecColor}; font-size: 13px;">${c.efec_equipo || '-'}</span></td>
+                    <td><span style="font-weight: 600; color: var(--text-muted); font-size: 10px; text-transform: uppercase;">${c.hipodromo}</span></td>
+                    <td style="font-size: 14px; font-weight:800; color:var(--accent-gold); font-family: var(--font-mono);">${c.carrera}</td>
+                    <td style="text-align:left; font-weight:700; color:var(--text-main); padding-left: 15px; font-size: 13px;">#${c.nro} - ${c.name}</td>
+                    <td><select onchange="seleccionarJockey(${c.id}, this.value)">${jSelect}</select></td>
+                    <td><select onchange="seleccionarTrainer(${c.id}, this.value)">${tSelect}</select></td>
+                    <td><span style="font-weight: 800; color: ${efecColor}; font-size: 13px; font-family: var(--font-mono);">${c.efec_equipo || '-'}</span></td>
                     <td><input type="text" value="${c.t1 || ''}" onchange="actualizarDato(${c.id}, 't1', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.t2 || ''}" onchange="actualizarDato(${c.id}, 't2', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.t3 || ''}" onchange="actualizarDato(${c.id}, 't3', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.t4 || ''}" onchange="actualizarDato(${c.id}, 't4', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.t5 || ''}" onchange="actualizarDato(${c.id}, 't5', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     
-                    <!-- MEJORA: placeholder con la distancia de hoy -->
                     <td><input type="number" value="${c.d1 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd1', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" value="${c.d2 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd2', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" value="${c.d3 || ''}" placeholder="${c.distanciaHoy}" onchange="actualizarDato(${c.id}, 'd3', this.value)" ${c.scratched ? 'disabled' : ''}></td>
@@ -576,23 +802,178 @@
                     
                     <td><input type="number" value="${c.puesto || ''}" onchange="actualizarDato(${c.id}, 'puesto', this.value)" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="number" value="${c.kilos || ''}" onchange="actualizarDato(${c.id}, 'kilos', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><select onchange="actualizarDato(${c.id}, 'style', this.value)" ${c.scratched ? 'disabled' : ''}><option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option><option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option><option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option></select></td>
-                    <td><input type="number" value="${c.quirin || ''}" onchange="actualizarDato(${c.id}, 'quirin', this.value)" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
+                    <td><select onchange="actualizarDato(${c.id}, 'style', this.value); calcularTodo();" ${c.scratched ? 'disabled' : ''}><option value=""></option><option value="E" ${c.style==='E'?'selected':''}>E</option><option value="P" ${c.style==='P'?'selected':''}>P</option><option value="S" ${c.style==='S'?'selected':''}>S</option><option value="E/P" ${c.style==='E/P'?'selected':''}>E/P</option></select></td>
+                    <td><input type="number" value="${c.quirin || ''}" onchange="actualizarDato(${c.id}, 'quirin', this.value); calcularTodo();" min="0" max="8" ${c.scratched ? 'disabled' : ''}></td>
                     <td><input type="text" value="${c.ml || ''}" onchange="actualizarDato(${c.id}, 'ml', this.value)" ${c.scratched ? 'disabled' : ''}></td>
-                    <td><input type="text" value="${c.lote || ''}" onchange="actualizarDato(${c.id}, 'lote', this.value)" placeholder="Ej: alw4000" style="color: var(--warning); font-weight: bold;" ${c.scratched ? 'disabled' : ''}></td>
-                    <td style="font-weight: bold; color: ${c.ajusteLote > 0 ? 'var(--danger)' : c.ajusteLote < 0 ? 'var(--success)' : 'var(--text-muted)'};">${c.ajusteLote ? (c.ajusteLote > 0 ? '+' : '') + c.ajusteLote.toFixed(2) : '0.00'}</td>
+                    <td><input type="text" value="${c.lote || ''}" onchange="actualizarDato(${c.id}, 'lote', this.value)" placeholder="Ej: alw4000" style="color: var(--accent-gold); font-weight: 700;" ${c.scratched ? 'disabled' : ''}></td>
+                    
+                    <td style="font-weight: 700; color: ${colorAjusteLote}; font-family: var(--font-mono);">${c.ajusteLote ? (c.ajusteLote > 0 ? '+' : '') + c.ajusteLote.toFixed(2) : '0.00'}</td>
+                    <td style="font-weight: 700; color: ${colorAjusteRitmo}; font-family: var(--font-mono);">${c.ajusteRitmo ? (c.ajusteRitmo > 0 ? '+' : '') + c.ajusteRitmo.toFixed(2) : '0.00'}</td>
+                    
                     <td class="${c.tpReal === 'S/D' ? 'text-sindatos' : 'text-destacado'}">${c.tpReal}</td>
-                    <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--success)' : ''}">${c.ajuste}</td>
-                    <td class="${c.tpAjustado === 'S/D' ? 'text-sindatos' : 'text-destacado'}" style="color: #c084fc;">${c.tpAjustado}</td>
+                    <td class="${c.ajuste > 0 ? 'alerta-trampa' : ''}" style="${c.ajuste < 0 ? 'color: var(--accent-green)' : ''}; font-family: var(--font-mono); font-weight: 600;">${c.ajuste}</td>
+                    <td class="${c.tpAjustado === 'S/D' ? 'text-sindatos' : 'text-destacado'}" style="color: var(--accent-purple);">${c.tpAjustado}</td>
                     <td class="${c.ranking === 1 ? 'val-rankin-1' : c.ranking === 2 ? 'val-rankin-2' : c.ranking === 3 ? 'val-rankin-3' : ''}">${c.ranking}</td>
-                    <td>${c.dif}</td>
-                    <td style="font-weight: 600;">${c.est}</td>
+                    <td style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">${c.dif}</td>
+                    <td style="font-weight: 700; color: var(--accent-gold); font-size: 11px;">${c.est}</td>
                     <td>${c.alerta === 'VALOR' ? '<span class="val-alerta alerta-valor">VALOR</span>' : c.alerta === 'TRAMPA' ? '<span class="val-alerta alerta-trampa">TRAMPA</span>' : c.alerta === 'EQUIPO ELITE' ? '<span class="val-alerta alerta-elite">ÉLITE</span>' : c.alerta === 'EQUIPO FRIO' ? '<span class="val-alerta alerta-equipo-frio">FRÍO</span>' : ''}</td>
-                    <td><select onchange="actualizarDato(${c.id}, 'tip', this.value)" ${c.scratched ? 'disabled' : ''} style="text-align:left; font-weight: bold; color: var(--warning);">${tipSelect}</select></td>
+                    <td><select onchange="actualizarDato(${c.id}, 'tip', this.value)" ${c.scratched ? 'disabled' : ''} style="font-weight: 700; color: var(--accent-gold); font-size: 11px;">${tipSelect}</select></td>
                     <td><input type="text" value="${c.notes || ''}" onchange="actualizarDato(${c.id}, 'notes', this.value)" placeholder="..." style="text-align:left;" ${c.scratched ? 'disabled' : ''}></td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        function calcularTodo() {
+            if(caballos.length === 0) return;
+            
+            const loteHoyStr = document.getElementById('lote_hoy').value;
+            const distanciaHoyStr = document.getElementById('distancia').value;
+            const hipoActual = document.getElementById('hipodromoActivo').value;
+            
+            let parHoy = NaN;
+            if (DB_PARS[hipoActual] && DB_PARS[hipoActual][distanciaHoyStr] && DB_PARS[hipoActual][distanciaHoyStr][loteHoyStr.toLowerCase().trim()]) {
+                parHoy = parseFloat(DB_PARS[hipoActual][distanciaHoyStr][loteHoyStr.toLowerCase().trim()]);
+            }
+
+            caballos.forEach(c => {
+                if (c.scratched) { c.tpReal = "Ret."; c.ajuste = "-"; c.tpAjustado = "Ret."; c.ranking = "-"; c.dif = "-"; c.est = "-"; c.alerta = ""; c.efec_equipo = "-"; c.ajusteLote = 0; c.ajusteRitmo = 0; return; }
+                
+                const tiempos = [parseTiempo(c.t1), parseTiempo(c.t2), parseTiempo(c.t3), parseTiempo(c.t4), parseTiempo(c.t5)];
+                const distancias = [
+                    c.d1 ? parseFloat(c.d1) : c.distanciaHoy,
+                    c.d2 ? parseFloat(c.d2) : c.distanciaHoy,
+                    c.d3 ? parseFloat(c.d3) : c.distanciaHoy,
+                    c.d4 ? parseFloat(c.d4) : c.distanciaHoy,
+                    c.d5 ? parseFloat(c.d5) : c.distanciaHoy
+                ];
+
+                let sumaPonderada = 0;
+                let sumaPesos = 0;
+                for(let i=0; i<5; i++) { 
+                    if(distancias[i] === c.distanciaHoy && !isNaN(tiempos[i])) {
+                        let peso = 5 - i;
+                        sumaPonderada += tiempos[i] * peso;
+                        sumaPesos += peso;
+                    } 
+                }
+                c.tpReal = sumaPesos > 0 ? (sumaPonderada / sumaPesos).toFixed(2) : "S/D";
+                
+                let ajusteBase = 0; 
+                const kilos = parseFloat(c.kilos); 
+                const puesto = parseFloat(c.puesto);
+                
+                if(!isNaN(kilos) && kilos > 0) ajusteBase += (kilos - 54) * 0.2;
+                if(!isNaN(puesto) && puesto > 0) { if(puesto <= 3) ajusteBase -= 0.2; else if(puesto >= 8) ajusteBase += 0.3; }
+                
+                c.ajusteLote = 0;
+                let parAnterior = NaN;
+                if (DB_PARS[hipoActual] && DB_PARS[hipoActual][c.distanciaHoy] && c.lote) {
+                    if (DB_PARS[hipoActual][c.distanciaHoy][c.lote.toLowerCase().trim()]) {
+                        parAnterior = parseFloat(DB_PARS[hipoActual][c.distanciaHoy][c.lote.toLowerCase().trim()]);
+                    }
+                }
+
+                if (!isNaN(parHoy) && !isNaN(parAnterior)) {
+                    c.ajusteLote = parHoy - parAnterior;
+                    ajusteBase += c.ajusteLote;
+                } else {
+                    const loteHoyScore = getClassScore(loteHoyStr);
+                    if (!isNaN(loteHoyScore)) {
+                        const loteAnteriorScore = getClassScore(c.lote);
+                        if (!isNaN(loteAnteriorScore)) {
+                            c.ajusteLote = (loteHoyScore - loteAnteriorScore) * 0.05;
+                            ajusteBase += c.ajusteLote;
+                        }
+                    }
+                }
+                
+                const jWin = parseFloat(c.j_win); const jPlace = parseFloat(c.j_place); const tWin = parseFloat(c.t_win); const tPlace = parseFloat(c.t_place);
+                let avgWin = NaN, avgPlace = NaN; let hasWin = false, hasPlace = false;
+                if (!isNaN(jWin) && !isNaN(tWin)) { avgWin = (jWin + tWin) / 2; hasWin = true; } else if (!isNaN(jWin)) { avgWin = jWin; hasWin = true; } else if (!isNaN(tWin)) { avgWin = tWin; hasWin = true; }
+                if (!isNaN(jPlace) && !isNaN(tPlace)) { avgPlace = (jPlace + tPlace) / 2; hasPlace = true; } else if (!isNaN(jPlace)) { avgPlace = jPlace; hasPlace = true; } else if (!isNaN(tPlace)) { avgPlace = tPlace; hasPlace = true; }
+                
+                if (hasWin || hasPlace) {
+                    let indiceVisual = 0;
+                    if (hasWin && hasPlace) { indiceVisual = (avgWin + avgPlace) / 2; c.efec_equipo = indiceVisual.toFixed(1); ajusteBase += ((15 - avgWin) * 0.02) + ((40 - avgPlace) * 0.01); } 
+                    else if (hasWin) { c.efec_equipo = avgWin.toFixed(1) + "W"; ajusteBase += ((15 - avgWin) * 0.02); } 
+                    else if (hasPlace) { c.efec_equipo = avgPlace.toFixed(1) + "P"; ajusteBase += ((40 - avgPlace) * 0.01); }
+                    if (hasWin && hasPlace) { if (avgWin >= 20 && avgPlace >= 45) c.alerta = "EQUIPO ELITE"; else if (avgWin < 10 && avgPlace < 30) c.alerta = "EQUIPO FRIO"; } 
+                    else if (hasWin) { if (avgWin >= 20) c.alerta = "EQUIPO ELITE"; else if (avgWin < 10) c.alerta = "EQUIPO FRIO"; } 
+                    else if (hasPlace) { if (avgPlace >= 45) c.alerta = "EQUIPO ELITE"; else if (avgPlace < 30) c.alerta = "EQUIPO FRIO"; }
+                } else { c.efec_equipo = "-"; }
+
+                c.ajusteBase = ajusteBase;
+                if (c.alerta !== "EQUIPO ELITE" && c.alerta !== "EQUIPO FRIO") c.alerta = ""; 
+            });
+
+            const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - C${c.carrera}`))];
+            
+            carrerasUnicas.forEach(clave => {
+                let raceHorses = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && !c.scratched);
+                let earlyHorses = raceHorses.filter(h => (h.style === 'E' || h.style === 'E/P') && parseFloat(h.quirin) >= 5);
+                let paceType = "Normal";
+
+                raceHorses.forEach(c => {
+                    let isEarly = (c.style === 'E' || c.style === 'E/P') && parseFloat(c.quirin) >= 5;
+                    let isCloser = (c.style === 'S' || c.style === 'P');
+                    c.ajusteRitmo = 0;
+
+                    if (earlyHorses.length === 1 && isEarly) {
+                        c.ajusteRitmo = -0.30; paceType = "Lone Speed";
+                    } else if (earlyHorses.length >= 3) {
+                        if (isEarly) c.ajusteRitmo = 0.40;
+                        else if (isCloser) c.ajusteRitmo = -0.30;
+                        paceType = "Speed Duel";
+                    } else if (earlyHorses.length === 2) {
+                        if (isEarly) c.ajusteRitmo = 0.20; paceType = "Duelo Leve";
+                    }
+                });
+
+                const paceAlert = document.getElementById('paceAlert');
+                if (paceType === "Speed Duel") {
+                    paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'; paceAlert.style.borderColor = 'rgba(239, 68, 68, 0.3)'; paceAlert.style.color = '#fca5a5';
+                    document.getElementById('paceAlertText').innerText = `🔥 GUERRA DE RITMO: Hay ${earlyHorses.length} velocistas. Favorece a los cerradores.`;
+                } else if (paceType === "Lone Speed") {
+                    paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.1)'; paceAlert.style.borderColor = 'rgba(16, 185, 129, 0.3)'; paceAlert.style.color = '#6ee7b7';
+                    document.getElementById('paceAlertText').innerText = `🐎 PASEO SOLITARIO: Solo hay 1 velocista. Tendrá el ritmo a su favor.`;
+                } else if (paceType === "Duelo Leve") {
+                    paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(245, 158, 11, 0.1)'; paceAlert.style.borderColor = 'rgba(245, 158, 11, 0.3)'; paceAlert.style.color = '#fcd34d';
+                    document.getElementById('paceAlertText').innerText = `⚔️ DUELO LEVE: 2 velocistas se pelearán la punta.`;
+                } else {
+                    paceAlert.style.display = 'none';
+                }
+
+                let lista = raceHorses.filter(c => c.tpReal !== "S/D");
+                
+                lista.forEach(c => {
+                    c.ajusteTotal = (c.ajusteBase + c.ajusteRitmo);
+                    c.ajuste = c.ajusteTotal.toFixed(2);
+                    c.tpAjustado = (parseFloat(c.tpReal) + c.ajusteTotal).toFixed(2);
+                });
+
+                lista.sort((a,b) => parseFloat(a.tpAjustado) - parseFloat(b.tpAjustado)); 
+                const mejorTiempo = lista.length > 0 ? parseFloat(lista[0].tpAjustado) : 0;
+                
+                lista.forEach((c, index) => {
+                    c.ranking = index + 1; 
+                    c.dif = (parseFloat(c.tpAjustado) - mejorTiempo).toFixed(2); 
+                    c.est = c.dif <= 0.3 ? "***" : c.dif <= 0.8 ? "**" : "*";
+                    
+                    const mlDecimal = parseOdds(c.ml);
+                    if (!isNaN(mlDecimal)) { 
+                        if (!c.alerta) { 
+                            if (c.ranking === 1 && mlDecimal >= 4.0) c.alerta = "VALOR"; 
+                            else if (c.ranking >= 4 && mlDecimal <= 2.5) c.alerta = "TRAMPA"; 
+                        } 
+                    }
+                });
+            });
+
+            caballos.forEach(c => { if(c.tpAjustado === "S/D" && !c.scratched) { c.ranking = "-"; c.dif = "-"; c.est = "-"; } });
+            
+            guardarSilencioso(); 
+            renderTabla(); 
             actualizarDashboard();
         }
 
@@ -600,20 +981,20 @@
             const filtroHipo = document.getElementById('hipodromoActivo').value;
             const filtroCar = document.getElementById('filtroCarrera').value;
             
-            const panel = document.getElementById('podiumPanel'); const ticketPanel = document.getElementById('ticketPanel'); const paceAlert = document.getElementById('paceAlert');
+            const panel = document.getElementById('podiumPanel'); const ticketPanel = document.getElementById('ticketPanel');
             
             let caballosFiltrados = caballos.filter(c => c.hipodromo === filtroHipo && c.ranking && c.ranking !== "-" && c.ranking !== "" && !c.scratched);
             if (filtroCar !== "TODAS") {
                 caballosFiltrados = caballosFiltrados.filter(c => c.carrera === parseInt(filtroCar));
             }
 
-            if (caballosFiltrados.length === 0) { panel.style.display = 'none'; ticketPanel.style.display = 'none'; if(paceAlert) paceAlert.style.display = 'none'; return; }
+            if (caballosFiltrados.length === 0) { panel.style.display = 'none'; ticketPanel.style.display = 'none'; return; }
             panel.style.display = 'flex'; ticketPanel.style.display = 'flex';
             
             const topCarrera = caballosFiltrados.sort((a,b) => a.ranking - b.ranking).slice(0, 4);
             
             const p1 = topCarrera[0]; const p2 = topCarrera[1]; const p3 = topCarrera[2]; const p4 = topCarrera[3];
-            const getHorseName = (h) => h ? `<span style="font-size:18px;">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:12px; color:#94a3b8;">(${h.tpAjustado})</span>` : '-';
+            const getHorseName = (h) => h ? `<span class="nro">#${h.nro}</span> ${h.name || 'S/N'} <span style="font-size:11px; color:#94a3b8; font-family:var(--font-mono);">(${h.tpAjustado})</span>` : '-';
             
             document.getElementById('podio1').innerHTML = getHorseName(p1); document.getElementById('podio2').innerHTML = getHorseName(p2); document.getElementById('podio3').innerHTML = getHorseName(p3);
             
@@ -625,11 +1006,6 @@
             if (p1 && p2) {
                 document.getElementById('tkWin').innerText = `#${p1.nro}`; document.getElementById('tkExacta').innerText = `${p1.nro} con ${p2.nro}`; document.getElementById('tkTrifecta').innerText = p3 ? `${p1.nro} - ${p2.nro} - ${p3.nro}` : 'Faltan datos'; document.getElementById('tkPool').innerText = p4 ? `${p1.nro}, ${p2.nro}, ${p3.nro}, ${p4.nro}` : `${p1.nro}, ${p2.nro}, ${p3.nro}`;
             } else { document.getElementById('tkWin').innerText = '-'; document.getElementById('tkExacta').innerText = '-'; document.getElementById('tkTrifecta').innerText = '-'; document.getElementById('tkPool').innerText = '-'; }
-            
-            const earlyHorses = topCarrera.filter(c => (c.style === 'E' || c.style === 'E/P') && parseFloat(c.quirin) >= 5);
-            if (earlyHorses.length >= 3) { paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(239, 68, 68, 0.15)'; paceAlert.style.borderColor = 'var(--danger)'; paceAlert.style.color = '#fca5a5'; document.getElementById('paceAlertText').innerText = `¡Alerta de Ritmo! Hay ${earlyHorses.length} caballos con alta velocidad de salida.`; } 
-            else if (earlyHorses.length === 1 && topCarrera.length > 3) { paceAlert.style.display = 'flex'; paceAlert.style.backgroundColor = 'rgba(16, 185, 129, 0.15)'; paceAlert.style.borderColor = 'var(--success)'; paceAlert.style.color = '#6ee7b7'; document.getElementById('paceAlertText').innerText = `¡Cuidado! Solo hay un caballo con alta velocidad de salida.`; } 
-            else { paceAlert.style.display = 'none'; }
         }
 
         function copiarTicket() {
@@ -637,79 +1013,6 @@
             if (win === '-') { alert("Primero ejecuta los cálculos mágicos."); return; }
             const texto = `🏇 *MI JUGADA HÍPICA*\n\n🏆 Ganador: ${win}\n🥈 Exacta: ${exacta}\n🥉 Trifecta: ${trifecta}\n💰 Pool: ${pool}\n\n_Creado con Sistema Hípico PRO_`;
             navigator.clipboard.writeText(texto).then(() => { alert("¡Jugada copiada al portapapeles!"); }).catch(err => { alert("Error al copiar."); });
-        }
-
-        function calcularTodo() {
-            if(caballos.length === 0) return;
-            
-            // Obtenemos el score de la clase de hoy
-            const loteHoyStr = document.getElementById('lote_hoy').value;
-            const loteHoyScore = getClassScore(loteHoyStr);
-
-            caballos.forEach(c => {
-                if (c.scratched) { c.tpReal = "Ret."; c.ajuste = "-"; c.tpAjustado = "Ret."; c.ranking = "-"; c.dif = "-"; c.est = "-"; c.alerta = ""; c.efec_equipo = "-"; c.ajusteLote = 0; return; }
-                const tiempos = [parseTiempo(c.t1), parseTiempo(c.t2), parseTiempo(c.t3), parseTiempo(c.t4), parseTiempo(c.t5)];
-                
-                // MEJORA: Si la distancia está vacía, usa la distancia de la carrera por defecto
-                const distancias = [
-                    c.d1 ? parseFloat(c.d1) : c.distanciaHoy,
-                    c.d2 ? parseFloat(c.d2) : c.distanciaHoy,
-                    c.d3 ? parseFloat(c.d3) : c.distanciaHoy,
-                    c.d4 ? parseFloat(c.d4) : c.distanciaHoy,
-                    c.d5 ? parseFloat(c.d5) : c.distanciaHoy
-                ];
-
-                let tiemposValidos = [];
-                for(let i=0; i<5; i++) { if(distancias[i] === c.distanciaHoy && !isNaN(tiempos[i])) tiemposValidos.push(tiempos[i]); }
-                c.tpReal = tiemposValidos.length > 0 ? (tiemposValidos.reduce((a,b) => a+b, 0) / tiemposValidos.length).toFixed(2) : "S/D";
-                
-                let ajuste = 0; 
-                const kilos = parseFloat(c.kilos); 
-                const puesto = parseFloat(c.puesto);
-                
-                if(!isNaN(kilos) && kilos > 0) ajuste += (kilos - 54) * 0.2;
-                if(!isNaN(puesto) && puesto > 0) { if(puesto <= 3) ajuste -= 0.2; else if(puesto >= 8) ajuste += 0.3; }
-                
-                // CÁLCULO AUTOMÁTICO DEL LOTE
-                c.ajusteLote = 0;
-                if (!isNaN(loteHoyScore)) {
-                    const loteAnteriorScore = getClassScore(c.lote);
-                    if (!isNaN(loteAnteriorScore)) {
-                        // Diferencia de clases * factor (0.05 seg por punto)
-                        c.ajusteLote = (loteHoyScore - loteAnteriorScore) * 0.05;
-                        ajuste += c.ajusteLote;
-                    }
-                }
-                
-                const jWin = parseFloat(c.j_win); const jPlace = parseFloat(c.j_place); const tWin = parseFloat(c.t_win); const tPlace = parseFloat(c.t_place);
-                let avgWin = NaN, avgPlace = NaN; let hasWin = false, hasPlace = false;
-                if (!isNaN(jWin) && !isNaN(tWin)) { avgWin = (jWin + tWin) / 2; hasWin = true; } else if (!isNaN(jWin)) { avgWin = jWin; hasWin = true; } else if (!isNaN(tWin)) { avgWin = tWin; hasWin = true; }
-                if (!isNaN(jPlace) && !isNaN(tPlace)) { avgPlace = (jPlace + tPlace) / 2; hasPlace = true; } else if (!isNaN(jPlace)) { avgPlace = jPlace; hasPlace = true; } else if (!isNaN(tPlace)) { avgPlace = tPlace; hasPlace = true; }
-                if (hasWin || hasPlace) {
-                    let indiceVisual = 0;
-                    if (hasWin && hasPlace) { indiceVisual = (avgWin + avgPlace) / 2; c.efec_equipo = indiceVisual.toFixed(1); ajuste += ((15 - avgWin) * 0.02) + ((40 - avgPlace) * 0.01); } 
-                    else if (hasWin) { c.efec_equipo = avgWin.toFixed(1) + "W"; ajuste += ((15 - avgWin) * 0.02); } 
-                    else if (hasPlace) { c.efec_equipo = avgPlace.toFixed(1) + "P"; ajuste += ((40 - avgPlace) * 0.01); }
-                    if (hasWin && hasPlace) { if (avgWin >= 20 && avgPlace >= 45) c.alerta = "EQUIPO ELITE"; else if (avgWin < 10 && avgPlace < 30) c.alerta = "EQUIPO FRIO"; } 
-                    else if (hasWin) { if (avgWin >= 20) c.alerta = "EQUIPO ELITE"; else if (avgWin < 10) c.alerta = "EQUIPO FRIO"; } 
-                    else if (hasPlace) { if (avgPlace >= 45) c.alerta = "EQUIPO ELITE"; else if (avgPlace < 30) c.alerta = "EQUIPO FRIO"; }
-                } else { c.efec_equipo = "-"; }
-                c.ajuste = ajuste.toFixed(2); c.tpAjustado = c.tpReal !== "S/D" ? (parseFloat(c.tpReal) + ajuste).toFixed(2) : "S/D";
-                if (c.alerta !== "EQUIPO ELITE" && c.alerta !== "EQUIPO FRIO") c.alerta = ""; 
-            });
-            const carrerasUnicas = [...new Set(caballos.map(c => `${c.hipodromo} - C${c.carrera}`))];
-            carrerasUnicas.forEach(clave => {
-                let lista = caballos.filter(c => `${c.hipodromo} - C${c.carrera}` === clave && c.tpAjustado !== "S/D" && !c.scratched);
-                if(lista.length === 0) return;
-                lista.sort((a,b) => parseFloat(a.tpAjustado) - parseFloat(b.tpAjustado)); const mejorTiempo = parseFloat(lista[0].tpAjustado);
-                lista.forEach((c, index) => {
-                    c.ranking = index + 1; c.dif = (parseFloat(c.tpAjustado) - mejorTiempo).toFixed(2); c.est = c.dif <= 0.3 ? "***" : c.dif <= 0.8 ? "**" : "*";
-                    const mlDecimal = parseOdds(c.ml);
-                    if (!isNaN(mlDecimal)) { if (!c.alerta) { if (c.ranking === 1 && mlDecimal >= 4.0) c.alerta = "VALOR"; else if (c.ranking >= 4 && mlDecimal <= 2.5) c.alerta = "TRAMPA"; } }
-                });
-            });
-            caballos.forEach(c => { if(c.tpAjustado === "S/D" && !c.scratched) { c.ranking = "-"; c.dif = "-"; c.est = "-"; } });
-            guardarSilencioso(); renderTabla(); 
         }
 
         function exportarDatos() {
@@ -729,8 +1032,8 @@
 
         function exportarCSV() {
             if(caballos.length === 0) return alert("No hay datos.");
-            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jinete", "J. Win%", "J. 1-2-3%", "Entrenador", "E. Win%", "E. 1-2-3%", "Indice Eq.", "TP Real", "Ajuste", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Tip", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
-            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey_name, c.j_win, c.j_place, c.trainer_name, c.t_win, c.t_place, c.efec_equipo, c.tpReal, c.ajuste, c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.tip, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
+            const cabeceras = ["Hipodromo", "Carrera", "Nro", "Ejemplar", "Jinete", "J. Win%", "J. 1-2-3%", "Entrenador", "E. Win%", "E. 1-2-3%", "Indice Eq.", "TP Real", "Ajuste Base", "Ajuste Ritmo", "TP Ajustado", "Ranking", "Dif", "Est", "Alerta", "Tip", "Style", "Quirin", "MorningLine", "Notas", "Retirado"];
+            const filas = caballos.map(c => [c.hipodromo, c.carrera, c.nro, c.name, c.jockey_name, c.j_win, c.j_place, c.trainer_name, c.t_win, c.t_place, c.efec_equipo, c.tpReal, c.ajusteBase ? c.ajusteBase.toFixed(2) : '', c.ajusteRitmo ? c.ajusteRitmo.toFixed(2) : '', c.tpAjustado, c.ranking, c.dif, c.est, c.alerta, c.tip, c.style, c.quirin, c.ml, c.notes, c.scratched ? 'SI' : 'NO'].join(","));
             const csvContent = "data:text/csv;charset=utf-8," + cabeceras.join(",") + "\n" + filas.join("\n"); const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "resultados_hipicos.csv"); document.body.appendChild(link); link.click(); link.remove();
         }
 
