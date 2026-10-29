@@ -21,6 +21,8 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .subtitle{font-size:9px;color:var(--text-muted)}
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:4px;
   padding:6px;margin-bottom:4px;}
+
+/* Encabezados de paneles */
 .panel h2{font-size:10px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px; display:inline-block;}
 .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .race-tabs{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:6px}
@@ -85,7 +87,13 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
   margin-top:4px;}
 
 /* --- RESULTADOS --- */
-.podium{display:grid; grid-template-columns: repeat(3, 1fr); gap:4px; max-width: 320px; margin: 0 auto;}
+.podium {
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 4px; 
+  max-width: 320px; 
+  margin: 0 auto;
+}
 .podium-slot{border-radius:4px;padding:4px 2px;text-align:center;color:#1a1a1a;font-weight:800;}
 .podium-slot.oro{background:linear-gradient(135deg,#FFD700,#FFA500)}
 .podium-slot.plata{background:linear-gradient(135deg,#E8E8E8,#A8A8A8)}
@@ -94,14 +102,25 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .podium-num{font-size:14px;font-weight:900;line-height:1;margin:1px 0}
 .podium-tp{font-size:10px;font-weight:900}
 
-/* CORRECCIÓN DEL ESPACIO VACÍO: Ahora usamos Flexbox */
+/* 
+   AQUÍ ESTABA EL PROBLEMA: 
+   Ahora la lista tiene un ancho máximo de 350px y se centra.
+   Así no se estira a lo largo de toda la pantalla.
+*/
+#resultsList {
+  max-width: 350px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .result-row{
   display: flex; 
-  justify-content: space-between; /* Separa la izquierda y la derecha */
+  justify-content: space-between; 
   align-items: center;
-  padding: 3px 6px; 
+  padding: 3px 8px; 
   border-radius: 3px; 
-  margin-bottom: 2px; 
   background: #f8fafc; 
   border: 1px solid var(--border); 
   font-size: 11px;
@@ -110,13 +129,11 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 .result-row.pos-2{border-left:3px solid var(--silver)}
 .result-row.pos-3{border-left:3px solid var(--bronze);background:#fdf6ec}
 
-/* Contenedor de la izquierda (Rank + Nº + Etiqueta) */
 .result-left {
   display: flex;
   align-items: center;
-  gap: 8px; /* Separación entre el puesto, el número y la etiqueta */
+  gap: 8px;
 }
-
 .result-rank{font-weight:900;color:var(--text-muted); width:15px; text-align:center;}
 .result-num{font-weight:800; min-width: 25px;}
 .result-tp{font-weight:900;color:var(--accent); font-size:12px;}
@@ -196,7 +213,7 @@ h1{font-size:15px;font-weight:800;background:linear-gradient(90deg,#2563eb,#7c3a
 </div>
 
 <div class="panel" id="resultsPanel" style="display:none;">
-  <h2>📊 Ranking</h2>
+  <h2 style="text-align:center; display:block; margin-bottom:4px;">📊 Ranking</h2>
   <div id="resultsList"></div>
 </div>
 
@@ -390,7 +407,6 @@ function renderResults(resultados){
       else if(r.ml <= 2.5) mlTag = '<span class="badge-trampa">TRAMP</span>';
     }
 
-    // Nuevo HTML usando Flexbox para que no haya huecos
     row.innerHTML=`
       <div class="result-left">
         <div class="result-rank">${i+1}</div>
